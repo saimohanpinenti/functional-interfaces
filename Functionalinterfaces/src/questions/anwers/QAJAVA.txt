@@ -1,0 +1,1760 @@
+BeanFactory vs ApplicationContext
+
+The Spring Framework comes with two IOC containers – BeanFactory and ApplicationContext. The BeanFactory is the most basic version of IOC containers, and the ApplicationContext extends the features of BeanFactory.
+BeanFactory loads beans on-demand, while ApplicationContext loads all beans at startup. Thus, BeanFactory is lightweight as compared to ApplicationContext. Let's understand it with an example.
+ApplicationContext enhances BeanFactory in a more framework-oriented style and provides several features that are suitable for enterprise applications.
+
+For instance, it provides messaging (i18n or internationalization) functionality, event publication functionality, annotation-based dependency injection, and easy integration with Spring AOP features.
+
+spring IOC container.
+
+Spring IoC Container is the core of Spring Framework. It creates the objects, configures and assembles their dependencies, manages their entire life cycle. The Container uses Dependency Injection(DI) to manage the components that make up the application. It gets the information about the objects from a configuration file(XML) or Java Code or Java Annotations and Java POJO class. These objects are called Beans. Since the Controlling of Java objects and their lifecycle is not done by the developers, hence the name Inversion Of Control. 
+
+what is bean lifecycle
+
+Bean life cycle is managed by the spring container. When we run the program then, first of all, the spring container gets started. After that, the container creates the instance of a bean as per the request, and then dependencies are injected. And finally, the bean is destroyed when the spring container is closed. Therefore, if we want to execute some code on the bean instantiation and just after closing the spring container, then we can write that code inside the custom init() method and the destroy() method.
+
+Cloning and types of Cloning in Java
+coping
+
+*shallow copy
+Abc obj = new ABC();
+
+obj.i = 5;
+obj.j = 6;
+
+ABC obj1 = obj ; shallow copy. 
+in shallow copy new object will not be created. new refernce is created to same object.
+
+ABC obj1 = new ABC();
+obj1.i = obj.i;
+obj1.j = obj.j;
+this is called deep copy
+In deep copy new vairable is created. Problem with deepcopy is if we have 50 variable we need to cpy each and every variable.
+
+object cloning.  using .clone method. 
+using clone method we can clone any object. It looks like shallow copy but it is a deepcopy.
+
+
+Marker Interface. If body is empty then how it manages and why there is need to implement it
+Marker Interface. If body is empty then how it manages and why there is need to implement it
+maker interface provides permission. eg clonable interface provides permisson to clone objects.
+the class which we wants to clone should implemet cloneale interface. which is a marker infterface.
+which dont have anything in it. it basically gives permission for cloning.
+eg    System.out.println("Hello, World!"); 
+        HelloWorld
+		obj = new HelloWorld();
+        
+        if(obj instanceof HelloWorld)
+          System.out.println("give permission");
+		  
+write a program to test a string is palindrome or not.
+
+
+  String palindrome = "abcba"
+  
+  for(int i = 0 , j = String.length() -1; i < j ; i++ ,j--)
+  {
+    if( !(palindrome . charAt(i).equals(palindrome.charAt(j)))){
+	   System.out.println("not a palindrom");
+	}
+  }
+   System.out.println("is  a palindrom");
+
+what is the diffence between creating a child object with parent class  refernce and child class refernce
+
+consider a parent class 
+public class ParentClass {
+
+	private int value = 10;
+	
+	public int getValue() {
+		return this.value;
+	}
+	public void setValue(int value) {
+		this.value  = value;
+	}
+}
+conisder a child class extending parent class
+public class ChildClass extends ParentClass {
+  private int value = 1000;
+  
+  public String getName() {
+	return name;
+}
+
+public void setName(String name) {
+	this.name = name;
+}
+
+private String name = "child";
+
+public int getValue() {
+	return value;
+}
+
+public void setValue(int value) {
+	this.value = value;
+}
+  
+}
+
+ParentClass parenntReference  = new ChildClass();
+//using  parent refernce we can only access the variables which of child class which are also there in parent class. the feild like "name" is from child class not inherited from //parent  class. so parenntReference cant access field "name" directly. it should access it the shown way.
+ 
+		System.out.println("parenntReference"+parenntReference.getValue()+"parenntReference"+((ChildClass) parenntReference).getName());
+		ChildClass childReference  = new ChildClass();
+		
+//using child class refernce we can access any feild of child class
+		System.out.println("childReference"+childReference.getValue()+"child refernce"+childReference.getName());
+		
+creating a parent object with child refernce  is not at all possible.
+
+  employeeinfo {
+    empId 
+	first name
+	lastname
+	department
+	project
+	adress
+	dob
+	gender
+	
+   }
+   
+   EmplyPosition
+   {
+    empId
+	
+	Position
+	
+	DateOf join
+	
+	salary
+   
+   }
+   
+   SELECT * from EmplyPosition
+   WHERE LIMIT N
+   
+   Write a query to fetch all employees names who also hold the managerial position.
+   
+   SELECT firstname from employeeinfo   
+   WHERE EmplyPosition =  "managerial"
+   ON employeeinfo.empID = EmplyPosition.empID.
+   
+   Write a query to calculate the even and odd records from a table.
+   
+		  
+If key in Hashmap will be Employee object then how the insertion will be done i.e custom hashmap
+https://youtu.be/xqhukPTkBsw
+public class Employee {
+
+	private String name;
+	private int id;
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public Employee(String name, int id) {
+		this.name = name;
+		this.id = id;
+	}
+	@Override
+	public String toString() {
+		return "Employee [name=" + name + ", id=" + id + "]";
+	}    
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, name);
+	}
+//	@Override
+//	public boolean equals(Object obj) {
+//		if (this == obj)
+//			return true;
+//		if (obj == null)
+//			return false;
+//		if (getClass() != obj.getClass())
+//			return false;
+//		Employee other = (Employee) obj;
+//		return id == other.id && Objects.equals(name, other.name);
+//	}
+	public static void main(String []args) {
+		System.out.println("Hello ");
+		
+		HashMap<Employee,String> empMap = new HashMap<>();
+		Employee employee1 = new Employee("Alpha", 1);
+		Employee employee2 = new Employee("Alpha", 1);
+//		here both the objects employee1 and employee2 are equal 
+		empMap.put(employee1, "Alpha");
+		empMap.put(employee2, "Beta");
+		
+		System.out.println("both objects are equal"+employee1.equals(employee2) );
+		System.out.println("Hashcode of emp1"+employee1.hashCode());
+		System.out.println("HashCode of emp2"+employee2.hashCode());
+//		output 
+//		both objects are equalfalse
+//		Hashcode of emp11239731077
+//		HashCode of emp2557041912
+//      since the hashcodes are differnt and equals method also saying false. these 2 objects may be stored in a differnt bucket.
+//		even if they hashmap try to store in same bucket. since the equals method is returning false. it will store both the objects as two separate keys 
+//		and duplication will happen.
+		
+		//if we override only equals method but not the hash code method then we get
+//		both objects are equaltrue
+//		Hashcode of emp11239731077
+//		HashCode of emp2557041912
+//		but hash code are  differnt so there is chance of having duplicate keys in differnt buckits. but not in the same bucket.
+		
+//		if we overide the hashcode but not equals method then output is 
+//		both objects are equalfalse
+//		Hashcode of emp163358238
+//		HashCode of emp263358238
+//		so the both objects will have same hashcode . the bucket they are inserted will be same but equals method is fAALSE so it insert the duplicate entry in same bucket	
+
+	}
+	
+}
+
+
+How to sort Employee bases on name and then age and then salary
+SELECT *
+from Employee
+Order by name, age, salary DESC
+
+@RestController vs @Controller
+@Controller is used to mark classes as Spring MVC Controller.	         @RestController annotation is a special controller used in RESTful Web services, and it’s the combination of @Controller and @ResponseBody annotation.
+It is a specialized version of @Component annotation.	                 It is a specialized version of @Controller annotation.
+In @Controller, we can return a view in Spring Web MVC.	                 In @RestController, we can not return a view.
+@Controller annotation indicates that the class is a “controller” like a web controller.	@RestController annotation indicates that class is a controller where @RequestMapping methods assume @ResponseBody semantics by default.
+In @Controller, we need to use @ResponseBody on every handler method.	In @RestController, we don’t need to use @ResponseBody on every handler method.
+It was added to Spring 2.5 version.	                                    It was added to Spring 4.0 version.
+
+@ResponseBody annotation
+The @ResponseBody annotation tells a controller that the object returned is automatically serialized into JSON and passed back into the HttpResponse object.
+
+Why static method is added in Interface in java 8
+In the past, if you had an interface Foo and wanted to group interface-related utils or factory methods, you would need to create a separate utils class FooUtils and store everything there.
+
+Those classes would not have anything in common other than the name, and additionally, the utils class would need to be made final and have a private constructor to forbid unwanted usage.
+
+Now, thanks to the interface static methods, you can keep everything in one place without creating any additional classes.
+
+It's also important to not forget all good practices and not throw everything mindlessly to one interface class - as pointed out in this answer
+
+Nth Largest number in array
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		System.out.println("hello");
+		int [] arr = new int[10];
+		for(int i =0;i<10;i++)
+		{
+			arr[i]= 10-i;
+		}
+		ArrayList<Integer>values = new ArrayList<>();
+		for(int i =0;i<arr.length;i++) {
+			values.add(arr[i]);
+		}
+		Collections.sort(values);
+		System.out.println(values.get(5));
+		
+	}
+	
+groupingBy(), publishingBy()
+
+Stream vs Collection
+Collection is an in-memory data structure, which holds all the values that the data structure currently has. Every element in the Collection has to be computed before we add it to the Collection. Operations such as searching, sorting, insertion, manipulation, and deletion can be performed on a Collection. It provides many interfaces like (Set, List, Queue, Deque) and Classes like (ArrayList, Vector, LinkedList, PriorityQueue, HashSet).
+
+On the other hand, IStream is an API that is introduced in Java 8 which is used to process collections of objects. A stream is a sequence of objects that supports various methods which can be pipelined to produce the desired result. The Stream API is used to process collections of objects.
+
+Main features of the Java stream are as follows:
+
+A stream is not a data structure instead it takes input from the Collections, Arrays, or I/O channels.
+Streams don’t change the original data structure, they only provide the result as per the pipelined methods.
+Each intermediate operation is lazily executed and returns another stream as a result, hence various intermediate operations can be pipelined. Terminal operations mark the end of the stream and return the result.
+
+1. In which scenario, creating thread using thread is suitable and which scenario creating using runnable is suitable
+In the first approach, Our class always extends Thread class. There is no chance of extending any other class. Hence we are missing Inheritance benefits. In the second approach, while implementing Runnable interface we can extends any other class. Hence we are able to use the benefits of Inheritance.
+Because of the above reasons, implementing Runnable interface approach is recommended than extending Thread class.
+The significant differences between extending Thread class and implementing Runnable interface:
+When we extend Thread class, we can’t extend any other class even we require and When we implement Runnable, we can save a space for our class to extend any other class in future or now.
+When we extend Thread class, each of our thread creates unique object and associate with it. When we implements Runnable, it shares the same object to multiple threads.
+
+2.how to create Restful web services along with DB operations
+it is a topic to cover 
+3.what does @springbootaplication mean
+*. @SprinBootApplication : it is comination of all the three annotation @EnabaleAutoConfigutation , @ComponentScan,@Configuration
+
+*. @EnabaleAutoConfigutation : this annotation automatically configures the spring application based on jar we added in the pom. xml .
+eg: we added dependency of h2 database in pom.xml and we dont configure any beans related to that database manually then springboot auto configration will configure automatically that dependency to us. 
+
+*@componentScan: this annotation is used to scan all the beans so that those will be visible to IOC container. if we want to load specific package to container we will use "basepackage" and mention the package 
+
+*@Cofiguration: we use this annotation for java based configration . where we can define a bean in the @configration class and bean will be created and available.
+eg: 
+
+@Configuration
+public class cofig{
+
+@Bean
+public TeastBean testBean(){
+return new TestBean();
+  }
+} 
+by this configration new object of TestBean will be created and can we used in the application
+
+4.List of collection where we have to filter it using stream or foreach and then collect it into map or replace the element
+
+		List<Person>persons = new ArrayList<>();
+		Person person1 = new Person("person1", "US");
+		Person person2 = new Person("person2", "UK");
+		Person person3 = new Person("person3", "Brazil");
+		Person person4 = new Person("person4", "US");
+		Person person5 = new Person("person5", "Germany");
+		Person person6 = new Person("person6", "US");
+		Person person7 = new Person("person7", "US");
+		Person person8 = new Person("person8", "Germany");
+		Person person9 = new Person("person9", "US");
+		Person person10 = new Person("person10", "Germany");
+		
+		persons.add(person1);
+		persons.add(person2);
+		persons.add(person3);
+		persons.add(person4);
+		persons.add(person5);
+		persons.add(person6);
+		persons.add(person7);
+		persons.add(person8);
+		persons.add(person9);
+		persons.add(person10);
+		persons = persons.stream().filter( person -> person.getCountry().equalsIgnoreCase("US")).collect(Collectors.toList());
+	     for( Person person : persons) {
+	    	 System.out.println(person.toString());
+	     }
+
+5 .how do we create singleton class .what is design pattern and why it is implemented
+n object-oriented programming, a singleton class is a class that can have only one object (an instance of the class) at a time. After the first time, if we try to instantiate the Singleton class, the new variable also points to the first instance created. So whatever modifications we do to any variable inside the class through any instance, affects the variable of the single instance created and is visible if we access that variable through any variable of that class type defined. 
+Remember the key points while defining class as a singleton class that is while designing a singleton class: 
+
+Make a constructor private.
+Write a static method that has the return type object of this singleton class. Here, the concept of Lazy initialization is used to write this static method.
+Purpose of Singleton Class
+The primary purpose of a Single class is to restrict the limit of the number of object creation to only one. This often ensures that there is access control to resources, for example, socket or database connection.
+
+The memory space wastage does not occur with the use of the singleton class because it restricts the instance creation. As the object creation will take place only once instead of creating it each time a new request is made.
+
+We can use this single object repeatedly as per the requirements. This is the reason why the multi-threaded and database applications mostly make use of the Singleton pattern in Java for caching, logging, thread pooling, configuration settings, and much more.
+
+For example, there is a license with us, and we have only one database connection or suppose if our JDBC driver does not allow us to do multithreading, then Singleton class comes into the picture and makes sure that at a time, only a single connection or a single thread can access the connection.
+6.what is agaile
+
+7. From inn sql, constraints in sql, index ,second highest and third highest salary , view .
+SQL Constraints
+SQL constraints are used to specify rules for the data in a table.
+
+Constraints are used to limit the type of data that can go into a table. This ensures the accuracy and reliability of the data in the table. If there is any violation between the constraint and the data action, the action is aborted.
+
+Constraints can be column level or table level. Column level constraints apply to a column, and table level constraints apply to the whole table.
+
+The following constraints are commonly used in SQL:
+
+NOT NULL - Ensures that a column cannot have a NULL value\
+CREATE TABLE Persons (
+    ID int NOT NULL,
+    LastName varchar(255) NOT NULL,
+    FirstName varchar(255) NOT NULL,
+    Age int
+);
+ALTER TABLE Persons
+MODIFY Age int NOT NULL;
+
+UNIQUE - Ensures that all values in a column are different
+The UNIQUE constraint ensures that all values in a column are different.
+
+Both the UNIQUE and PRIMARY KEY constraints provide a guarantee for uniqueness for a column or set of columns.
+
+A PRIMARY KEY constraint automatically has a UNIQUE constraint.
+
+However, you can have many UNIQUE constraints per table, but only one PRIMARY KEY constraint per table.
+CREATE TABLE Persons (
+    ID int NOT NULL,
+    LastName varchar(255) NOT NULL,
+    FirstName varchar(255),
+    Age int,
+    UNIQUE (ID)
+);
+https://www.w3schools.com/sql/sql_unique.asp  more on unique
+
+
+PRIMARY KEY - A combination of a NOT NULL and UNIQUE. Uniquely identifies each row in a table
+The PRIMARY KEY constraint uniquely identifies each record in a table.
+Primary keys must contain UNIQUE values, and cannot contain NULL values.
+A table can have only ONE primary key; and in the table, this primary key can consist of single or multiple columns (fields).
+CREATE TABLE Persons (
+    ID int NOT NULL,
+    LastName varchar(255) NOT NULL,
+    FirstName varchar(255),
+    Age int,
+    PRIMARY KEY (ID)
+);
+
+FOREIGN KEY - Prevents actions that would destroy links between tables
+The FOREIGN KEY constraint is used to prevent actions that would destroy links between tables.
+A FOREIGN KEY is a field (or collection of fields) in one table, that refers to the PRIMARY KEY in another table.
+The table with the foreign key is called the child table, and the table with the primary key is called the referenced or parent table.
+CREATE TABLE Orders (
+    OrderID int NOT NULL,
+    OrderNumber int NOT NULL,
+    PersonID int,
+    PRIMARY KEY (OrderID),
+    FOREIGN KEY (PersonID) REFERENCES Persons(PersonID)
+);
+
+CHECK - Ensures that the values in a column satisfies a specific condition
+The CHECK constraint is used to limit the value range that can be placed in a column.
+If you define a CHECK constraint on a column it will allow only certain values for this column.
+If you define a CHECK constraint on a table it can limit the values in certain columns based on values in other columns in the row.
+CREATE TABLE Persons (
+    ID int NOT NULL,
+    LastName varchar(255) NOT NULL,
+    FirstName varchar(255),
+    Age int,
+    CHECK (Age>=18)
+);
+
+DEFAULT - Sets a default value for a column if no value is specified
+The DEFAULT constraint is used to set a default value for a column.
+The default value will be added to all new records, if no other value is specified.
+CREATE TABLE Persons (
+    ID int NOT NULL,
+    LastName varchar(255) NOT NULL,
+    FirstName varchar(255),
+    Age int,
+    City varchar(255) DEFAULT 'Sandnes'
+);
+
+CREATE INDEX - Used to create and retrieve data from the database very quickly
+The CREATE INDEX statement is used to create indexes in tables.
+Indexes are used to retrieve data from the database more quickly than otherwise. The users cannot see the indexes, they are just used to speed up searches/queries.
+CREATE INDEX idx_lastname
+ON Persons (LastName);
+
+CREATE INDEX idx_pname
+ON Persons (LastName, FirstName);
+
+from is a keyword in sql to say from which tabel we need to fetch data
+
+Create table Employees
+(
+ ID int primary key identity,
+ FirstName nvarchar(50),
+ LastName nvarchar(50),
+ Gender nvarchar(50),
+ Salary int
+)
+GO
+
+Insert into Employees values ('Ben', 'Hoskins', 'Male', 70000)
+Insert into Employees values ('Mark', 'Hastings', 'Male', 60000)
+Insert into Employees values ('Steve', 'Pound', 'Male', 45000)
+Insert into Employees values ('Ben', 'Hoskins', 'Male', 70000)
+Insert into Employees values ('Philip', 'Hastings', 'Male', 45000)
+Insert into Employees values ('Mary', 'Lambeth', 'Female', 30000)
+Insert into Employees values ('Valarie', 'Vikings', 'Female', 35000)
+Insert into Employees values ('John', 'Stanmore', 'Male', 80000)
+GO
+
+To find the highest salary it is straight forward. We can simply use the Max() function as shown below.
+Select Max(Salary) from Employees
+
+To get the second highest salary use a sub query along with Max() function as shown below.
+Select Max(Salary) from Employees where Salary [ (Select Max(Salary) from Employees)
+
+To find nth highest salary using Sub-Query
+SELECT TOP 1 SALARY
+FROM (
+      SELECT DISTINCT TOP N SALARY
+      FROM EMPLOYEES
+      ORDER BY SALARY DESC
+      ) RESULT
+ORDER BY SALARY
+
+To find nth highest salary using CTE
+WITH RESULT AS
+(
+    SELECT SALARY,
+           DENSE_RANK() OVER (ORDER BY SALARY DESC) AS DENSERANK
+    FROM EMPLOYEES
+)
+SELECT TOP 1 SALARY
+FROM RESULT
+WHERE DENSERANK = N
+
+To find 2nd highest salary we can use any of the above queries. Simple replace N with 2. 
+
+Similarly, to find 3rd highest salary, simple replace N with 3. 
+
+Please Note: On many of the websites, you may have seen that, the following query can be used to get the nth highest salary. The below query will only work if there are no duplicates.
+WITH RESULT AS
+(
+    SELECT SALARY,
+           ROW_NUMBER() OVER (ORDER BY SALARY DESC) AS ROWNUMBER
+    FROM EMPLOYEES
+)
+SELECT SALARY
+FROM RESULT
+WHERE ROWNUMBER = 3
+
+8. bean life cycle .'
+The lifecycle of any object means when & how it is born, how it behaves throughout its life, and when & how it dies. Similarly, the bean life cycle refers to when & how the bean is instantiated, what action it performs until it lives, and when & how it is destroyed. In this article, we will discuss the life cycle of the bean. 
+
+Bean life cycle is managed by the spring container. When we run the program then, first of all, the spring container gets started. After that, the container creates the instance of a bean as per the request, and then dependencies are injected. And finally, the bean is destroyed when the spring container is closed. Therefore, if we want to execute some code on the bean instantiation and just after closing the spring container, then we can write that code inside the custom init() method and the destroy() method.
+
+
+9. Dev tools in microservices architecture.
+Top 9 Microservice Tools
+Tools for microservice development mostly divided into the following category, which plays an essential role in microservice development by increasing the developers’ productivity.
+
+Programming Language
+Architectural Frameworks
+Build and assembly
+Message queuing
+Containerization
+Cloud deployment
+Application monitoring
+API Testing and management
+Team building
+
+10. how hashmap, hashset and hashtabel works internally.
+hashset
+Differences between HashMap and HashTable in Java
+
+Difficulty Level : Easy
+Last Updated : 23 Jan, 2022
+HashMap and Hashtable store key and value pairs in a hash table. When using a Hashtable or HashMap, we specify an object that is used as a key and the value that you want to be linked to that key. The key is then hashed, and the resulting hash code is used as the index at which the value is stored within the table. Now let us discuss with the help of an example.
+
+Hashmap vs Hashtable 
+
+HashMap is non-synchronized. It is not thread-safe and can’t be shared between many threads without proper synchronization code whereas Hashtable is synchronized. It is thread-safe and can be shared with many threads.
+HashMap allows one null key and multiple null values whereas Hashtable doesn’t allow any null key or value.
+HashMap is generally preferred over HashTable if thread synchronization is not needed.
+Difference Between Hashmap and Hashtable
+S. No.	Hashmap	Hashtable
+1.	No method is synchronized.	Every method is synchronized.
+2.	Multiple threads can operate simultaneously and hence hashmap’s object is not thread-safe.	At a time only one thread is allowed to operate the Hashtable’s object. Hence it is thread-safe.
+3.	Threads are not required to wait and hence relatively performance is high.	It increases the waiting time of the thread and hence performance is low.
+4.	Null is allowed for both key and value.	Null is not allowed for both key and value. Otherwise, we will get a null pointer exception.
+5.	It is introduced in the 1.2 version.	It is introduced in the 1.0 version.
+6. 	It is non-legacy.	It is a legacy.
+Now you must be wondering why HashTable doesn’t allow null and HashMap do? 
+
+The answer is simple. In order to successfully store and retrieve objects from a HashTable, the objects used as keys must implement the hashCode method and the equals method. Since null is not an object, it can’t implement these methods. HashMap is an advanced version and improvement on the Hashtable. HashMap was created later.
+
+11.hashmap vs hashtabel
+Differences between HashMap and HashTable in Java
+
+Difficulty Level : Easy
+Last Updated : 23 Jan, 2022
+HashMap and Hashtable store key and value pairs in a hash table. When using a Hashtable or HashMap, we specify an object that is used as a key and the value that you want to be linked to that key. The key is then hashed, and the resulting hash code is used as the index at which the value is stored within the table. Now let us discuss with the help of an example.
+
+Hashmap vs Hashtable 
+
+HashMap is non-synchronized. It is not thread-safe and can’t be shared between many threads without proper synchronization code whereas Hashtable is synchronized. It is thread-safe and can be shared with many threads.
+HashMap allows one null key and multiple null values whereas Hashtable doesn’t allow any null key or value.
+HashMap is generally preferred over HashTable if thread synchronization is not needed.
+Difference Between Hashmap and Hashtable
+S. No.	Hashmap	Hashtable
+	No method is synchronized.	Every method is synchronized.
+	Multiple threads can operate simultaneously and hence hashmap’s object is not thread-safe.	At a time only one thread is allowed to operate the Hashtable’s object. Hence it is thread-safe.
+	Threads are not required to wait and hence relatively performance is high.	It increases the waiting time of the thread and hence performance is low.
+	Null is allowed for both key and value.	Null is not allowed for both key and value. Otherwise, we will get a null pointer exception.
+	It is introduced in the 1.2 version.	It is introduced in the 1.0 version.
+ 	It is non-legacy.	It is a legacy.
+Now you must be wondering why HashTable doesn’t allow null and HashMap do? 
+
+The answer is simple. In order to successfully store and retrieve objects from a HashTable, the objects used as keys must implement the hashCode method and the equals method. Since null is not an object, it can’t implement these methods. HashMap is an advanced version and improvement on the Hashtable. HashMap was created later.
+Concurrent Hashmap is a class that was introduced in jdk1.5.  Concurrent hash map applies locks only at bucket level called fragment while adding or updating the map. So, a concurrent hash map allows concurrent read and write operations to the map. 
+
+HashTable is a thread-safe legacy class introduced in the Jdk1.1. It is a base implementation of Map interface. It doesn't allow null keys and values. It is synchronized in nature so two different threads can’t access simultaneously. Hashtable does not maintain any order.
+
+Sr. No.
+Key
+HashTable
+ConcurrentHashMap
+Basic 
+HashTable is a thread-safe legacy class introduced in the Jdk1.1
+ ConcurrentHashmap is a class that was introduced in jdk1.5
+
+Locking
+It applies lock on the entire collection 
+ConcurrentHashMap apply locks only at bucket level called fragment  while adding or updating the map
+
+Performance 
+It is slower than  ConcurrentHashMap
+It is better than HashTable
+
+Null
+It doesn't allow null key and value
+It allows null key and value
+
+12. tread , thread ppol..??
+Java Thread pool represents a group of worker threads that are waiting for the job and reused many times.
+In the case of a thread pool, a group of fixed-size threads is created. A thread from the thread pool is pulled out and assigned a job by the service provider. After completion of the job, the thread is contained in the thread pool again.
+Thread Pool Methods
+newFixedThreadPool(int s): The method creates a thread pool of the fixed size s.
+
+newCachedThreadPool(): The method creates a new thread pool that creates the new threads when needed but will still use the previously created thread whenever they are available to use.
+
+newSingleThreadExecutor(): The method creates a new thread.
+
+Advantage of Java Thread Pool
+Better performance It saves time because there is no need to create a new thread.
+
+Real time usage
+It is used in Servlet and JSP where the container creates a thread pool to process the request.
+
+
+
+13. types of annotations in spring
+topic to be discussed
+
+14. sleep() vs wait() in thread
+sleep() is a method which is used to pause the process for few seconds or the time we want to. But in case of wait() method, thread goes in waiting state and it won’t come back automatically until we call the notify() or notifyAll().
+
+The major difference is that wait() releases the lock or monitor while sleep() doesn’t releases the lock or monitor while waiting. wait() is used for inter-thread communication while sleep() is used to introduce pause on execution, generally.
+
+Thread.sleep() sends the current thread into the “Not Runnable” state for some amount of time. The thread keeps the monitors it has acquired — i.e. if the thread is currently in a synchronized block or method no other thread can enter this block or method. If another thread calls t.interrupt(). it will wake up the sleeping thread.
+
+While sleep() is a static method which means that it always affects the current thread (the one that is executing the sleep method). A common mistake is to call t.sleep() where t is a different thread; even then, it is the current thread that will sleep, not the t thread.
+
+15. Class level lock vs object level lock
+Synchronization: 
+
+Synchronization is a modifier that is used for the method and blocks only. With the help of a synchronized modifier, we can restrict a shared resource to be accessed only by one thread. When two or more threads need access to shared resources, there is some loss of data i.e. data inconsistency. The process by which we can achieve data consistency between multiple threads is called Synchronization.
+
+Why do you need Synchronization
+
+Let us assume if you have two threads that are reading and writing to the same ‘resource’. Suppose there is a variable named geek, and you want that at one time only one thread should access the variable(atomic way). But Without the synchronized keyword, your thread 1 may not see the changes thread 2 made to geek, or worse, it may only be half changed that cause the data inconsistency problem. This would not be what you logically expect. The tool needed to prevent these errors is synchronization.
+
+In synchronization, there are two types of locks on threads:  
+
+Object-level lock: Every object in java has a unique lock. Whenever we are using a synchronized keyword, then only the lock concept will come into the picture. If a thread wants to execute then synchronized method on the given object. First, it has to get a lock-in that object. Once the thread got the lock then it is allowed to execute any synchronized method on that object. Once method execution completes automatically thread releases the lock. Acquiring and release lock internally is taken care of by JVM and the programmer is not responsible for these activities. Let’s have a look at the below program to understand the object level lock:
+
+// Java program to illustrate
+// Object lock concept
+class Geek implements Runnable {
+    public void run() { Lock(); }
+    public void Lock()
+    {
+        System.out.println(
+            Thread.currentThread().getName());
+        synchronized (this)
+        {
+            System.out.println(
+                "in block "
+                + Thread.currentThread().getName());
+            System.out.println(
+                "in block "
+                + Thread.currentThread().getName()
+                + " end");
+        }
+    }
+ 
+    public static void main(String[] args)
+    {
+        Geek g = new Geek();
+        Thread t1 = new Thread(g);
+        Thread t2 = new Thread(g);
+        Geek g1 = new Geek();
+        Thread t3 = new Thread(g1);
+        t1.setName("t1");
+        t2.setName("t2");
+        t3.setName("t3");
+        t1.start();
+        t2.start();
+        t3.start();
+    }
+}
+Output
+t1
+t3
+t2
+in block t3
+in block t1
+in block t3 end
+in block t1 end
+in block t2
+in block t2 end
+Class level lock: Every class in Java has a unique lock which is nothing but a class level lock. If a thread wants to execute a static synchronized method, then the thread requires a class level lock. Once a thread got the class level lock, then it is allowed to execute any static synchronized method of that class. Once method execution completes automatically thread releases the lock. Let’s look at the below program for better understanding:
+
+// Java program to illustrate class level lock
+class Geek implements Runnable {
+    public void run() { Lock(); }
+ 
+    public void Lock()
+    {
+        System.out.println(
+            Thread.currentThread().getName());
+        synchronized (Geek.class)
+        {
+            System.out.println(
+                "in block "
+                + Thread.currentThread().getName());
+            System.out.println(
+                "in block "
+                + Thread.currentThread().getName()
+                + " end");
+        }
+    }
+ 
+    public static void main(String[] args)
+    {
+        Geek g1 = new Geek();
+        Thread t1 = new Thread(g1);
+        Thread t2 = new Thread(g1);
+        Geek g2 = new Geek();
+        Thread t3 = new Thread(g2);
+        t1.setName("t1");
+        t2.setName("t2");
+        t3.setName("t3");
+        t1.start();
+        t2.start();
+        t3.start();
+    }
+}
+Output
+t1
+t2
+t3
+in block t1
+in block t1 end
+in block t3
+in block t3 end
+in block t2
+in block t2 end
+
+16. JVM architecture.
+JVM (Java Virtual Machine) is an abstract machine. It is a specification that provides runtime environment in which java bytecode can be executed.
+
+JVMs are available for many hardware and software platforms (i.e. JVM is platform dependent).Let's understand the internal architecture of JVM. It contains classloader, memory area, execution engine etc.
+
+JVM Architecture
+
+17. spring immutability
+
+
+18.  
+
+19. garbage collector - system.gc() ->how finalise() called 
+
+20. list of employees how will i rename idenentical employee from list
+
+21. serializable
+The Serializable interface is present in java.io package. It is a marker interface. A Marker Interface does not have any methods and fields. Thus classes implementing it do not have to implement any methods. Classes implement it if they want their instances to be Serialized or Deserialized. Serialization is a mechanism of converting the state of an object into a byte stream. Serialization is done using ObjectOutputStream. Deserialization is the reverse process where the byte stream is used to recreate the actual Java object in memory. This mechanism is used to persist the object. Deserialization is done using ObjectInputStream. Thus it can be used to make an eligible for saving its state into a file. 
+
+22. transient keyword in java
+transient is a variables modifier used in serialization. At the time of serialization, if we don’t want to save value of a particular variable in a file, then we use transient keyword. When JVM comes across transient keyword, it ignores original value of the variable and save default value of that variable data type.
+
+transient keyword plays an important role to meet security constraints. There are various real-life examples where we don’t want to save private data in file. Another use of transient keyword is not to serialize the variable whose value can be calculated/derived using other serialized objects or system such as age of a person, current date, etc.
+Practically we serialized only those fields which represent a state of instance, after all serialization is all about to save state of an object to a file. It is good habit to use transient keyword with private confidential fields of a class during serialization.
+
+
+// A sample class that uses transient keyword to
+// skip their serialization.
+class Test implements Serializable
+{
+    // Making password transient for security
+    private transient String password;
+  
+    // Making age transient as age is auto-
+    // computable from DOB and current date.
+    transient int age;
+  
+    // serialize other fields
+    private String username, email;
+    Date dob;
+  
+    // other code
+}
+transient and static : Since static fields are not part of state of the object, there is no use/impact of using transient keyword with static variables. However there is no compilation error.
+
+transient and final : final variables are directly serialized by their values, so there is no use/impact of declaring final variable as transient. There is no compile-time error though.
+
+23. volatile 
+https://www.geeksforgeeks.org/volatile-keyword-in-java/
+Using volatile is yet another way (like synchronized, atomic wrapper) of making class thread-safe. Thread-safe means that a method or class instance can be used by multiple threads at the same time without any problem. Consider the below example. 
+
+class SharedObj
+{
+   // Changes made to sharedVar in one thread
+   // may not immediately reflect in other thread
+   static int sharedVar = 6;
+}
+Suppose that two threads are working on SharedObj. If two threads run on different processors each thread may have its own local copy of sharedVariable. If one thread modifies its value the change might not reflect in the original one in the main memory instantly. This depends on the write policy of cache. Now the other thread is not aware of the modified value which leads to data inconsistency.
+Note that volatile should not be confused with the static modifier. static variables are class members that are shared among all objects. There is only one copy of them in the main memory. 
+volatile vs synchronized: Before we move on let’s take a look at two important features of locks and synchronization. 
+Mutual Exclusion: It means that only one thread or process can execute a block of code (critical section) at a time.
+Visibility: It means that changes made by one thread to shared data are visible to other threads.
+Java’s synchronized keyword guarantees both mutual exclusion and visibility. If we make the blocks of threads that modify the value of the shared variable synchronized only one thread can enter the block and changes made by it will be reflected in the main memory. All other threads trying to enter the block at the same time will be blocked and put to sleep. 
+
+In some cases, we may only desire visibility and not atomicity. The use of synchronized in such a situation is overkill and may cause scalability problems. Here volatile comes to the rescue. Volatile variables have the visibility features of synchronized but not the atomicity features. The values of the volatile variable will never be cached and all writes and reads will be done to and from the main memory. However, the use of volatile is limited to a very restricted set of cases as most of the times atomicity is desired. For example, a simple increment statement such as x = x + 1; or x++ seems to be a single operation but is really a compound read-modify-write sequence of operations that must execute atomically. 
+
+24. implementation classes of list(I) & set(I)
+In Java, both the List and the Set are available in the Collection framework. In order to store the collection of objects as a single unit, Set and List interface are used. Apart from these similarities, both the interfaces have so many differences too, which are as follows:
+
+S.No	List	                                                                     Set
+1.	The list implementation allows us to add the same or duplicate elements.	The set implementation doesn't allow us to add the same or duplicate elements.
+2.	The insertion order is maintained by the List.	                            It doesn't maintain the insertion order of elements.
+3.	List allows us to add any number of null values.	                        Set allows us to add at least one null value in it.
+4.	The List implementation classes are LinkedList and ArrayList.	               The Set implementation classes are TreeSet, HashSet and LinkedHashSet.
+5.	We can get the element of a specified index from the list using the get() method.	We cannot find the element from the Set based on the index because it doesn't provide any get method().
+6.	It is used when we want to frequently access the elements by using the index.	It is used when we want to design a collection of distinct elements.
+7.	The method of List interface listiterator() is used to iterate the List elements.	The iterator is used when we need to iterate the Set elements.
+
+25.list  of annotations in springboot.
+
+26. what is mock
+Mockito is a java based mocking framework, used in conjunction with other testing frameworks such as JUnit and TestNG.
+
+It internally uses Java Reflection API and allows to create objects of a service. A mock object returns a dummy data and avoids external dependencies. It simplifies the development of tests by mocking external dependencies and apply the mocks into the code under test.
+
+27 string buffer vs String builder
+Java provides three classes to represent a sequence of characters: String, StringBuffer, and StringBuilder. The String class is an immutable class whereas StringBuffer and StringBuilder classes are mutable. There are many differences between StringBuffer and StringBuilder. The StringBuilder class is introduced since JDK 1.5.
+
+A list of differences between StringBuffer and StringBuilder is given below:
+
+Difference between StringBuffer and StringBuilder
+No.	StringBuffer	StringBuilder
+1)	StringBuffer is synchronized i.e. thread safe. It means two threads can't call the methods of StringBuffer simultaneously.	StringBuilder is non-synchronized i.e. not thread safe. It means two threads can call the methods of StringBuilder simultaneously.
+2)	StringBuffer is less efficient than StringBuilder.	StringBuilder is more efficient than StringBuffer.
+3)	StringBuffer was introduced in Java 1.0	StringBuilder was introduced in Java 1.5
+
+28 when to arraylist & linked List.
+ArrayList provides constant time for search operation, so it is better to use ArrayList if searching is more frequent operation than add and remove operation. The LinkedList provides constant time for add and remove operations. So it is better to use LinkedList for manipulation.
+
+ArrayList has O(1) time complexity to access elements via the get and set methods.
+
+LinkedList has O(n/2) time complexity to access the elements.
+
+LinkedLinked class implements Deque interface also, so you can get the functionality of double ended queue in LinkedList. The ArrayList class doesn't implement Deque interface.
+
+In sort, ArrayList is better to access data wherease LinkedList is better to manipulate data. Both classes implements List interface.
+
+29. view, trigger in sql 
+ A trigger is a stored procedure in database which automatically invokes whenever a special event in the database occurs. For example, a trigger can be invoked when a row is inserted into a specified table or when certain table columns are being updated.
+
+Syntax:
+
+create trigger [trigger_name] 
+[before | after]  
+{insert | update | delete}  
+on [table_name]  
+[for each row]  
+[trigger_body] 
+
+BEFORE and AFTER of Trigger:
+BEFORE triggers run the trigger action before the triggering statement is run.
+AFTER triggers run the trigger action after the triggering statement is run.
+
+30. what is maven and what are differnt types of maven repository..??
+A maven repository is a directory of packaged JAR file with pom.xml file. Maven searches for dependencies in the repositories. There are 3 types of maven repository:
+
+Local Repository
+in your file system m2 folder
+Central Repository
+Maven central repository is located on the web. It has been created by the apache maven community itself.
+
+The path of central repository is: http://repo1.maven.org/maven2/.
+Remote Repository
+Maven remote repository is located on the web. Most of libraries can be missing from the central repository such as JBoss library etc, so we need to define remote repository in pom.xml file.
+
+Let's see the code to add the jUnit library in pom.xml file.
+
+31 how to objects interact with each other
+Typically, Java programs that you write will create many different objects from templates known as classes. These objects interact with one another by sending each other messages. The result of a message is a method invocation which performs some action or modifies the state of the receiving object.
+
+32 new features of java8
+Lambda expressions,
+Method references,
+Functional interfaces,
+Stream API,
+Default methods,
+Base64 Encode Decode,
+Static methods in interface,
+Optional class,
+Collectors class,
+ForEach() method,
+Nashorn JavaScript Engine,
+Parallel Array Sorting,
+Type and Repating Annotations,
+IO Enhancements,
+Concurrency Enhancements,
+JDBC Enhancements etc.
+
+
+33 syntax of writing syncroinsed method and block 
+Synchronized block can be used to perform synchronization on any specific resource of the method.
+Suppose we have 50 lines of code in our method, but we want to synchronize only 5 lines, in such cases, we can use synchronized block.
+If we put all the codes of the method in the synchronized block, it will work same as the synchronized method.
+Synchronized block is used to lock an object for any shared resource.
+Scope of synchronized block is smaller than the method.
+A Java synchronized block doesn't allow more than one JVM, to provide access control to a shared resource.
+The system performance may degrade because of the slower working of synchronized keyword.
+Java synchronized block is more efficient than Java synchronized method.
+// A Sender class  
+class Sender   
+{   
+  public void SenderMsg(String msg)  
+  {   
+    System.out.println("\nSending a Message: "  + msg);  
+    try  
+    {   
+      Thread.sleep(800);   
+    }   
+    catch (Exception e)   
+    {   
+      System.out.println("Thread interrupted.");   
+    }   
+    System.out.println("\n" +msg+ "Sent");  
+  }  
+}   
+// A Sender class for sending a message using Threads   
+class SenderWThreads extends Thread   
+{   
+  private String msg;   
+  Sender sd;   
+  
+  // Receiver method to receive a message object and a message to be sent   
+  SenderWThreads(String m, Sender obj)  
+  {   
+    msg = m;  
+    sd = obj;   
+  }   
+  
+  public void run()   
+  {   
+    // Checks that only one thread sends a message at a time.   
+    synchronized(sd)   
+    {   
+      // synchronizing the sender object   
+      sd.SenderMsg(msg);  
+    }   
+  }   
+}   
+// Driver Code   
+public class ShynchronizedMultithreading  
+{   
+  public static void main(String args[])   
+  {   
+    Sender sender = new Sender();   
+    SenderWThreads sender1 = new SenderWThreads( "Hola " , sender);  
+SenderWThreads sender2 =  new SenderWThreads( "Welcome to Javatpoint website ", sender);  
+  
+    // Start two threads of SenderWThreads type   
+    sender1.start();   
+    sender2.start();   
+  
+    // wait for threads to end   
+    try  
+    {   
+      sender1.join();   
+      sender2.join();   
+    }   
+    catch(Exception e)   
+    {   
+      System.out.println("Interrupted");   
+    }   
+  }   
+}  
+34 if private main method is written then what will happen ? will JVM access main()..?? if error then complie time error or runtime error
+Yes, we can declare the main method as private in Java.
+
+It compiles successfully without any errors but at the runtime, it says that the main method is not public.
+The above code is working successfully at compile time but it will throw an error at the runtime.
+
+35. abstract vs interface
+Abstract class and interface both are used to achieve abstraction where we can declare the abstract methods. Abstract class and interface both can't be instantiated.
+
+But there are many differences between abstract class and interface that are given below.
+
+Abstract class	                                                  Interface
+1) Abstract class can have abstract and non-abstract methods.	Interface can have only abstract methods. Since Java 8, it can have default and static methods also.
+2) Abstract class doesn't support multiple inheritance.	Interface supports multiple inheritance.
+3) Abstract class can have final, non-final, static and non-static variables.	Interface has only static and final variables.
+4) Abstract class can provide the implementation of interface.	Interface can't provide the implementation of abstract class.
+5) The abstract keyword is used to declare abstract class.	The interface keyword is used to declare interface.
+6) An abstract class can extend another Java class and implement multiple Java interfaces.	An interface can extend another Java interface only.
+7) An abstract class can be extended using keyword "extends".	An interface can be implemented using keyword "implements".
+8) A Java abstract class can have class members like private, protected, etc.	Members of a Java interface are public by default.
+9)Example:
+public abstract class Shape{
+public abstract void draw();
+}	Example:
+public interface Drawable{
+void draw();
+}
+Simply, abstract class achieves partial abstraction (0 to 100%) whereas interface achieves fully abstraction (100%).
+ 
+ 
+36. advantage of collection over array.
+Arrays are fixed in size that is once we create an array we can not increased or decreased based on our requirement.	Collection are growable in nature that is based on our requirement. We can increase or decrease of size.
+With respect to memory Arrays are not recommended to use.	With respect to memory collection are recommended to use.
+With respect to performance Arrays are recommended to use.	With respect to performance collection are not recommended to use.
+Arrays can hold only homogeneous data types elements.	Collection can hold both homogeneous and and heterogeneous elements.
+There is no underlying data structure for arrays and hence ready made  method support is not available.	Every collection class is implemented based on some standard data structure and hence for every requirement ready made method support is available being a performance. we can use these method directly and We are not responsible to implement these methods.
+Arrays can hold both object and primitive.	Collection can hold only object types but not primitive datatypes such as int, long, short, etc. 
+37. Is JVM interpereter platform dependent.
+When we say Java is Platform independent, we are referring to the language and not the interpreters.
+
+The interpreters need to be system dependent. They need to speak two languages. They need understand the Java bytecode and translate it to a language or instructions that the machine understands. Hence, the name interpreters.
+39. what are interpreter and jit complier in java
+The Just-In-Time (JIT) compiler is a an essential part of the JRE i.e. Java Runtime Environment, that is responsible for performance optimization of java based applications at run time. Compiler is one of the key aspects in deciding performance of an application for both parties i.e. the end user and the application developer.
+
+Java JIT Compiler : General Overview
+
+Bytecode is one of the most important features of java that aids in cross-platform execution. Way of converting bytecode to native machine language for execution has a huge impact on the speed of it. These Bytecode have to be interpreted or compiled to proper machine instructions depending on the instruction set architecture. Moreover these can be directly executed if the instruction architecture is bytecode based. Interpreting the bytecode affects the speed of execution.
+In order to improve performance, JIT compilers interact with the Java Virtual Machine (JVM) at run time and compile suitable bytecode sequences into native machine code. While using a JIT compiler, the hardware is able to execute the native code, as compared to having the JVM interpret the same sequence of bytecode repeatedly and incurring an overhead for the translation process. This subsequently leads to performance gains in the execution speed, unless the compiled methods are executed less frequently.
+The JIT compiler is able to perform certain simple optimizations while compiling a series of bytecode to native machine language. Some of these optimizations performed by JIT compilers are data-analysis, reduction of memory accesses by register allocation, translation from stack operations to register operations, elimination of common sub-expressions etc. The greater is the degree of optimization done, the more time a JIT compiler spends in the execution stage. Therefore it cannot afford to do all the optimizations that a static compiler is capable of, because of the extra overhead added to the execution time and moreover it’s view of the program is also restricted.
+40. can we store float value to double.
+yes we ca store. there is no data loss if we store float in double.
+
+42. how to get value form application.properties file and also from custom propeties file.
+using @Value annotation 
+eg: @Value("${userBucket.path}")
+private String userBucketPath;
+
+43. how to calicualte age if we give dob.
+public static int calculateAge(LocalDate dob)   
+{  
+//creating an instance of the LocalDate class and invoking the now() method      
+//now() method obtains the current date from the system clock in the default time zone      
+LocalDate curDate = LocalDate.now();  
+//calculates the amount of time between two dates and returns the years  
+if ((dob != null) && (curDate != null))   
+{  
+return Period.between(dob, curDate).getYears();  
+}  
+else  
+{  
+return 0;  
+}  
+} 
+
+44. how "this " is used in lamda expression.??
+The "this" and "super" references within a lambda expression are the same as in the enclosing context. Since the lambda expression doesn't define a new scope, "this" keyword within a lambda expression signifies "this" parameter of a method where the lambda expression is residing.
+
+In the below example, this.toString() calls the toString() method of the LambdaTest object but not the toString() method of the Operate instance.
+@FunctionalInterface
+interface Operate {
+   int func(int num1, int num2);
+   public String toString();
+}
+public class LambdaTest {
+   public static void main(String[] args) {
+      LambdaTest test = new LambdaTest();
+      test.getResult();
+   }
+   public void getResult() {
+      Operate op = (num1, num2) -> { // lambda expression
+         System.out.println("This hashcode: " + this.hashCode());
+         System.out.println("Calling toString(): "+ this.toString());
+         return num1 + num2;
+      };
+      System.out.println("Result is: "+ funcInt.func(10, 7));
+   }
+   @Override
+   public String toString() {
+      System.out.println("Super hashcode: " + super.hashCode());
+      return Integer.toString(super.hashCode());
+   }
+}
+
+
+45. SOA vs monolitic vs microserives
+A monolithic architecture is comfortable for small teams to work with, which is why many startups choose this approach when building an app. Сomponents of monolithic software are interconnected and interdependent, which helps the software be self-contained. This architecture is a traditional solution for building applications, but some developers find it outdated. However, we believe that a monolithic architecture is a perfect solution in some circumstancesA monolithic architecture is comfortable for small teams to work with, which is why many startups choose this approach when building an app. Сomponents of monolithic software are interconnected and interdependent, which helps the software be self-contained. This architecture is a traditional solution for building applications, but some developers find it outdated. However, we believe that a monolithic architecture is a perfect solution in some circumstances
+here are lots of tools you can integrate to facilitate development. In addition, all actions are performed with one directory, which provides for easier deployment. With a monolithic core, developers don’t need to deploy changes or updates separately, as they can do it at once and save lots of time.
+A service-oriented architecture (SOA) is a software architecture style that refers to an application composed of discrete and loosely coupled software agents that perform a required function. SOA has two main roles: a service provider and a service consumer. Both of these roles can be played by a software agent. The concept of SOA lies in the following: an application can be designed and built in a way that its modules are integrated seamlessly and can be easily reused.
+
+46. JDBC prepared statements 
+
+47. Spring Boot CLI.
+The Spring Boot CLI is a Command Line Interface for Spring Boot. It can be used for a quick start with Spring. It can run Groovy scripts which means that a developer need not write boilerplate code; all that is needed is focus on business logic. Spring Boot CLI is the fastest way to create a Spring-based application.
+
+Features
+In this section, we will look at the different features of Spring Boot CL −
+It provides an interface to run and test Spring Boot Application from command prompt.
+It internally use Spring Boot Starter and Spring Boot AutoConfigurate components in order to resolve all dependencies and executes the application.
+It contains Groovy compiler and Grape Dependency Manager.
+It supports Groovy Scripts without external Groovy installation.
+It adds Spring Boot defaults and resolve all dependencies automatically.
+
+48. cors spring boot
+Cross-Origin Resource Sharing (CORS) is a security concept that allows restricting the resources implemented in web browsers. It prevents the JavaScript code producing or consuming the requests against different origin.
+
+For example, your web application is running on 8080 port and by using JavaScript you are trying to consuming RESTful web services from 9090 port. Under such situations, you will face the Cross-Origin Resource Sharing security issue on your web browsers.
+
+Two requirements are needed to handle this issue −
+
+RESTful web services should support the Cross-Origin Resource Sharing.
+
+RESTful web service application should allow accessing the API(s) from the 8080 port.
+
+In this chapter, we are going to learn in detail about How to Enable Cross-Origin Requests for a RESTful Web Service application.
+
+Enable CORS in Controller Method
+We need to set the origins for RESTful web service by using @CrossOrigin annotation for the controller method. This @CrossOrigin annotation supports specific REST API, and not for the entire application.
+
+
+
+50. default method in java
+Before Java 8, interfaces could have only abstract methods. The implementation of these methods has to be provided in a separate class. So, if a new method is to be added in an interface, then its implementation code has to be provided in the class implementing the same interface. To overcome this issue, Java 8 has introduced the concept of default methods which allow the interfaces to have methods with implementation without affecting the classes that implement the interface.
+
+
+// A simple program to Test Interface default
+// methods in java
+interface TestInterface
+{
+    // abstract method
+    public void square(int a);
+  
+    // default method
+    default void show()
+    {
+      System.out.println("Default Method Executed");
+    }
+}
+  
+class TestClass implements TestInterface
+{
+    // implementation of square abstract method
+    public void square(int a)
+    {
+        System.out.println(a*a);
+    }
+  
+    public static void main(String args[])
+    {
+        TestClass d = new TestClass();
+        d.square(4);
+  
+        // default method executed
+        d.show();
+    }
+}
+Output:
+
+ 16
+ Default Method Executed
+51. how do we design a project based on microservices
+
+52. singleton scope VS application scope
+https://www.baeldung.com/spring-bean-scopes
+
+this link contains all scopes 
+
+The application scope creates the bean instance for the lifecycle of a ServletContext.
+This is similar to the singleton scope, but there is a very important difference with regards to the scope of the bean.
+When beans are application scoped, the same instance of the bean is shared across multiple servlet-based applications running in the same ServletContext, while singleton scoped beans are scoped to a single application context only.
+
+When we define a bean with the singleton scope, the container creates a single instance of that bean; all requests for that bean name will return the same object, which is cached. Any modifications to the object will be reflected in all references to the bean. This scope is the default value if no other scope is specified.
+
+53. NOsuchBeanFoundException & how to handel it. how to handel such exception using annotations 
+ Spring org.springframework.beans.factory.NoSuchBeanDefinitionException.
+This is a common exception thrown by the BeanFactory when trying to resolve a bean that simply isn't defined in the Spring Context.
+We'll illustrate the possible causes for this problem and the available solutions.
+And of course, exceptions happen when we least expect them, so have a look at the full list of exceptions and solutions in Spring.
+https://www.baeldung.com/spring-nosuchbeandefinitionexception
+
+54. @pathVariable and @requestbody
+will get all in annotations 
+
+55. how to switch to another internal / external server in springboot 
+o far, in previous examples we used to deploy and run the applications using embedded tomcat server provided by the spring boot. Generally in the real-time projects we wont use inbuilt servers provided by the frameworks because of many reasons like security, maintenance and control. So in this article I will show you how can we deploy the spring boot applications on external servers (in this tutorial I am going to consider the external server as Tomcat).
+
+Just do these changes to your spring boot application which you want to deploy it on to external tomcat server.
+
+pom.xml, add dependency and packaging to war
+Extend your main class with SpringBootServletInitializer and override its configure method
+Generate WAR and deploy into the external server
+If want you can change the context path also in the application.properties. (Optional)
+
+56. what is transaction
+Transactions group a set of tasks into a single execution unit. Each transaction begins with a specific task and ends when all the tasks in the group successfully complete. If any of the tasks fail, the transaction fails. Therefore, a transaction has only two results: success or failure. 
+Incomplete steps result in the failure of the transaction. A database transaction, by definition, must be atomic, consistent, isolated and durable. These are popularly known as 
+ACID properties. 
+How to implement Transactions using SQL?
+Following commands are used to control transactions. It is important to note that these statements cannot be used while creating tables and are only used with the DML Commands such as – INSERT, UPDATE and DELETE. 
+1. BEGIN TRANSACTION: It indicates the start point of an explicit or local transaction. 
+Syntax:
+BEGIN TRANSACTION transaction_name ;
+2. SET TRANSACTION: Places a name on a transaction. 
+
+Syntax: 
+SET TRANSACTION [ READ WRITE | READ ONLY ];
+3. COMMIT: If everything is in order with all statements within a single transaction, all changes are recorded together in the database is called committed. The COMMIT command saves all the transactions to the database since the last COMMIT or ROLLBACK command. 
+Syntax: 
+ 
+COMMIT;
+
+57. how to build only few java classes out of  mmultiple java classes present..??
+no answer
+58. what is fault tolerance in microservices
+https://openliberty.io/docs/22.0.0.2/fault-tolerance.html#:~:text=Microservice%2Dbased%20applications%20are%20resilient,strategies%20to%20handle%20common%20errors.
+59. what is circuit breaker.
+https://openliberty.io/docs/22.0.0.2/fault-tolerance.html#:~:text=Microservice%2Dbased%20applications%20are%20resilient,strategies%20to%20handle%20common%20errors.
+60. 3rd highest salry using sql query
+  SELECT * ((SELECT *from Employee
+ordery by salary DESC TOP 6)AS T)
+ORDERBY T.salary ACSC top1
+6th highest
+mysql> select * from ((select * from Employee 
+       ORDER BY `sal` DESC limit 6 ) AS T) 
+       ORDER BY T.`sal` ASC limit 1;
+Alternate use of Limit:
+select * from Employee ORDER BY `sal` ASC limit 5,1; // will return 6th highest 
+
+
+61. how to restrict some classes from getting auto configured.
+Add below similar configuration to your application.yml file,
+
+---
+spring:
+  profiles: test
+  autoconfigure.exclude: org.springframework.boot.autoconfigure.session.SessionAutoConfiguration
+
+62. 403, 501, 404 http status codes.??
+
+HTTP Error 400 - Bad Request
+HTTP Error 401 - Unauthorized
+HTTP status 403 - Forbidden
+HTTP status 404 - Not Found
+6/16/22, 11:46 PM What do the HTTP status codes, such as 403, 404, 500, mean? - FAQ | easyname
+https://www.easyname.com/en/support/hosting/158-what-do-the-http-status-codes-such-as-403-404-500-mean 2/4
+This error message is shown when a site or folder on a server are requested but cannot be found at the
+given URL. Please check your input.
+Please note that this error can also appear if there is no start file (index.php or index.html).
+This error often occurs with the application firewall (mod_security). To protect against attacks on web applications, incoming and outgoing data traffic is checked for rule violations. If an action violates one of
+these rules, the corresponding IP address is temporarily blocked and the user receives the status message
+"406 - Not Acceptable".
+The IP address is automatically unblocked after some time and access to the web application is then possible again. The time period depends on the severity of the violation.
+Another possibility to make it accessible again is to deactivate the application firewall. It can be deactivated either for the entire web hosting or only for individual subdomains.
+For the entire web hosting: Go to the menu item [Web Hosting] then to [Web Server Settings]. In the lefthand panel General, switch off "Mod Security" and click on the "Save" button.
+This option causes new subdomains to be created without protection by the application firewall. For already existing subdomains, the protection must be removed manually.
+For individual subdomains: Go to the menu item [Web Hosting] then [Subdomains]. Click on the blue
+pen symbol (Edit) next to the corresponding subdomain. Then click on the link Advanced Options. A
+menu will open in which you will see a tick next to "Activate application firewall". Click on the tick to deactivate the application firewall. Save your settings by clicking on the "Save" button.
+Attention!
+Disabling the Application Firewall will make your web application or website more vulnerable to attackers. It is therefore not recommended to disable it.
+The server took longer than it's allocated timeout window. In this case the server terminates the
+connection.
+The HTTP 429 Too Many Requests response status code indicates the user has sent too many requests in a
+given amount of time.
+A Retry-After header might be included to this response indicating how long to wait before making a new
+request. For example if more than 50 requests are received from the same IP address (cumulative hits)
+within the same second, our server will block that IP for the next 10 minutes as a security measure.
+HTTP status 406 - Not Acceptable
+HTTP Error 408 - Request Timeout
+HTTP status 429 - Too Many Requests
+6/16/22, 11:46 PM What do the HTTP status codes, such as 403, 404, 500, mean? - FAQ | easyname
+https://www.easyname.com/en/support/hosting/158-what-do-the-http-status-codes-such-as-403-404-500-mean 3/4
+This is a "catch all" status for unexpected errors. The server side error message is commonly caused by eg.
+misconfigured .htaccess files or PHP errors, which you you can check in the file php_error.log on your
+Webhost.
+You can find the php_error.log file in the /log/ directory - this directory can be found on the same level as
+your /html/ directory
+This HTTP status code indicates, that under the specified URL there's no content to be displayed.
+This means, that the server is currently unavailable or the server is overallocated. You can check the file
+php_error.log as described for the status code 500.
+Should you not find helpful error messages in the logfile, please try changing the session_cache to the option filesystem, you can do this in the easyname control panel if you navigate to [Web Hosting] → [PHP settings] and click the link "Settings".
+Please note that this change will take up to 15 minutes to take effect, so please try waiting 15 minutes before trying to call up your site and refresh it.
+
+63. what is the flow of spring bootaplication flow..??
+
+64. can spring boot be used for very large aplication
+
+65. disadvantages and advantages of springboot.
+
+66. @RestController vs @controller
+
+67. bean factory vs appplication context
+
+68. List of dulicate employee name , how to print list of map<Empname,Counter> using java 8.
+
+69. @trasient
+
+70. what should we do if multiple services uses some dependencies in pom.xml
+
+71. If we need to configure for downloading of jar from somewhere else then. what do we need to do..??
+
+72. differnce between string and string builder 
+
+73 what is sprinboot
+
+74. why we use @RestController in spring boot.
+
+75. differce betweenn string and string builder.
+
+76. differnce between arraylist and linked list.
+
+77. differnce between array and arraylist.
+
+78. what is hash map.
+
+79. will hashmap allow duplication of keys.??
+
+80 . I have any employee class which is having employeename , employeeId, designation. a simple POJO class. 
+I want to use employee class object as key for the hashmap.
+
+81. tell me about concurrent hashmap.
+
+82. what are equals and hashcode methods in java. can we use these methods to other OBjects than string.  
+
+83. is equals method is in string class.
+
+84. what are java streams. 
+
+85. singleton design pattern.
+
+86. what is your database.
+
+87. how will you connect to database from your application.
+
+88. what is the role of spring IOC container in depencdency injection.
+
+89. what is dependency injection. 
+
+90. Is depencdency injection done only for POJO classes in springboot
+
+91. what is @component annotation.
+
+92. what is the use of @bean annotation
+
+93. how @component differnnt form @bean annotation.
+
+94. JVM and JDK.
+
+95. how does the JVM manages memory internally.
+
+96. differnt ways of creating objects in java. 
+
+97. what does static keyword do
+
+98. why main method is static 
+
+99. what are oops concepts. 
+
+100. with inheritance we will get parent functionaity to child. if we dont want some particular functionality. what should i do. we need to make that field private. if we dont want a class to be extended. what we need to do. we need to make that class as final.
+
+
+102. keyword final, finally, finalize
+
+103. diamond problem in java. no choice of extending  2 or more classes.
+
+104. do you know about anonymous array.
+
+105. In java how to create custom exceptions
+
+106. typecasting in java.
+
+107. what is threading. explain about threading.
+
+108. zagged array in java
+
+109. ca you describe about sentence "write once and run any where".
+
+110. types of constructors in java. If there is any one parametrized Constructor present in a class, Default Constructor will not be added at Compile time. So if your program has any constructor containing parameters and no default constructor is specified then you will not be able to create object of that class using Default constructor
+
+111. what is deep copy shallow copy and clone
+
+112. pulic class Myclass{
+static final int counter;
+final int rollNo;
+public void test(){
+system.out.println(rollNO);
+}}
+counter is final and 
+rollNo is also final. so it will throw error.
+If you don't initialize or forget to initialize a blank final variable then the compiler will complain about it by throwing a compile-time error
+
+
+113. Immutability in JAVA.
+
+114. how to make a immutable class in java
+
+115. any other class than string which is immutable . wrapper classes are imutable
+
+116. String s = new String("ABC");
+s = new String("xyz");
+System.out.println(s);
+
+117. what do you know about string constant pool in java
+Remember that all the String literals created with the new keyword take place in the Java heap, not in the String pool.
+
+118. when we create a new String using new keyword. where it is stored. In string constant pool or heap area.
+Remember that all the String literals created with the new keyword take place in the Java heap, not in the String pool.
+
+119. what will trainsinet keyword do in JAVA
+transient is a variables modifier used in serialization. At the time of serialization, if we don’t want to save value of a particular variable in a file, then we use transient keyword. When JVM comes across transient keyword, it ignores original value of the variable and save default value of that variable data type.
+
+
+120. what is serialization and deserialization in JAVA. where do we use it..??
+
+121. what is compile time constant in java. 
+
+122. what is memory leak.
+
+123. what are wrapper class.
+
+124. what is autoboxing and autounboxing.
+
+125. what is microservices
+
+126. why do we go for micro services. we can create one big services.
+
+127. what is database. what is mysql database
+
+128. what clauses you use in SQL
+
+129. what is maven why do we use it.
+
+130. what are design patterns.
+
+131. collections . why do we use collection
+
+132. collection is a interface or class.
+
+133. do you know collections concept.
+
+134. what is differnce between array and arraylist.
+
+135. is array is fied size. 
+
+136. does map belongs to collection or not..??
+
+137. will map implements collection interface
+
+138. can value of a map can be another map..??
+ 
+139. what is covarient return type. 
+
+140.what is SDLC 
+
+141. what is differnce between waterfall and agaile methodlogy.
+
+142. what do you do in aws
+
+143. what is garbage collection in java
+
+144. which collection you used in your project.
+
+145. how hash map work internally 
+
+146. what is differnce between arraylist and linkedList.
+
+147. what happens if linked list is full. will linked list have capacity. will arraylist have capacity. 
+
+148. what is a marker interface. then what is its use. 
+
+
+
+149. class A{
+public int m1(int b )throws FileNOtFoundExcpetion{
+return b; 
+}
+}
+
+class B extends A{
+ public int m1(int b)throws IOexception{
+return b;}
+}
+what is the output of this code.
+ 
+150.
+public class TEst{
+ public static void main (String[] args){
+sum(5,5);
+}
+public long sum(long a,long b){
+return a+b;}
+public long sum (int a,int b){
+return a+b;}
+}
+to call those methods first we need to create a object.
+
+151 differnce between IS-A relationship and Has-A relationship. in java
+
+152. diffence between comparable and comparator.
+
+153. what are the cursors in in java
+
+154. what is concurrent modification excpetion. 
+
+154. what is the differnce bettwen throw and throws keyword
+
+155. what happens if we write a method which throws exception inside a try catch block.
+
+156. features of java 8.
+
+157.  what makes java functional programming.
+
+158. where do we use this keyword and super key word
+
+159. can we use this or super  keyword in static method. 
+
+160.  write a number to reverse a number. 
+
+161. what are the ways of creating thread. which is the best way of creating a trhead
+
+162. how do we start a thread.
+
+163. what happens is sleep in thread. and wait in thread. what happens if we dirctly call .run method and not calling .start method.
+
+164. what is join method.
+
+165. what is a singleton class. how to create a singleton class.
+
+166. wny we use springboot over spring. 
+
+167. what are the types of joins 
+
+168. what is polymorphisum. polymorphisum wit out inheritance. overriding 
+
+169. what is data hiding and data binding. 
+
+170. what is copy constructor.
+
+171. what is exception handling. 
+
+172. what is garbage collection.
+
+173. String constant pool .what is garbage collector
+
+174. public class DEmo{
+  public static void main(String[] arr){
+
+System.out.println("main1");
+}
+
+public static void main(String arr){
+
+System.out.println("main2");
+}
+}
+
+
+what is the output of the code.
+
+
+175 .what are annotations in springboot
+
+176. what is scop of a bean
+
+177. what is autowireing.
+
+178. what is @ component. 
+
+179. what is a constructor way ofcreating bean
+
+180. limitations of autowring.
+
+181. what is cursor in sql.
+
+   
+   employeeinfo {
+    empId 
+	first name
+	lastname
+	department
+	project
+	adress
+	dob
+	gender
+	
+   }
+   
+   EmplyPosition
+   {
+    empId
+	
+	Position
+	
+	DateOf join
+	
+	salary
+   
+   }
+   
+   SELECT * from EmplyPosition
+   WHERE LIMIT N
+   
+   Write a query to fetch all employees names who also hold the managerial position.
+   
+   SELECT firstname from employeeinfo   
+   WHERE EmplyPosition IS  "managerial"
+   ON employeeinfo.empID = EmplyPosition.empID.
+   
+   Write a query to calculate the even and odd records from a table.
+
+182. feth top N reocrds from empposition
+
+183. write a query to fetvh all employees names who also hold the mangerial positon
+
+184. write a query to calculate the even and odd records from a tabel.
+
+185. what is springboot
+
+186. why we are using @RestController.
+
+187. what is a singleton class
+
+188. what is @SpringBootApplication annotation.
+
+189. flow a springboot application flow -> controller to impl. returned 
+
+190. what is use of @service annotation
+
+191. what is maven
+
+192.  wat is depencdency injection
+
+193. what is a string in java
+
+194. Is string a class or keyword.
+
+195. What are the differnt ways to create.
+
+196. what is immutable and mutable
+
+197. what is thread in java
+
+198. what is runnable interface.
+
+199. join method usage..??
+ 
+200. what is the keyword and finalise 
+
+201. what is restful webservices.
+
+202. what is acutator in springboot.
+
+203. @sterioType annotations
+
+204. bean factory and application context
+
+205. Aplkication. properties file
+
+206. where we put our depencdenices in spring boot.
+
+207. java 8 concepts. 
+
+208. what is functional interface..??
+
+209 differnce between array and arraylist 
+
+210. differnce between set and map.
+
+211. in map duplication will be allowed. 
+
+212. what is generics.
+
+213. Spring and Springboot
+
+214. arraylist vs linkedlist
+
+215. exception handling. runtime and complile time excpetion.
+
+216. throw and throws.
+
+217. can we have multiple try blocks 
+
+218. nested try blocks
+
+219. multiple catch blocks
+
+220. multi threading.
+
+221. how oops concepts are using. in each 
+
+222. differce between requestMapping and getmapping
+
+223. sprig profiles in springboot..??
+
+224. IOC containers, dependency injection.
+
+225.  pattern and string reverse program
+
+226. what is SDLC.
+
+227. how to make a rest call.
+
+228. differnce in regular API and microservices.
+
+229. why do we nneed iterfaces..?? abstact class and interface 
+
+230.  how to cover REST call part using mockito.
+
+231. how to iterate a hashMap. how to iterate Arraylist.
+
+232. first max and second max of an array
+
+233. how to extend an exception. 
+
+234. if a class extend exception .them it is a checked or uncheked excpetion
+
+235. @controller Vs @RestController.
+
+236. @Qualifier
+
+237. why we have main method in spring boot . what is auto configutation
+
+238. what is mean by authentication and authorization in restful API.
+
+239. is it mandatoruy to have abstract methods in abstract class..?
+
+240. wgat is the use of abstract class with out abstract methods in java 
+
+241. Java Stream API. 
+
+242. how will you filter null values from list using streams. 
+
+243. how to conver list to map using maps
+
+244. what is concurrent hashmap.
+
+245. I want remove duplicate values from Arraylist . how to do it.
+
+246. HashSET
+
+247. Springboot vs Spring MVC
+
+248. inbuilt server available in Springboot.
+
+249. @AutoConfiguration anotation do
+
+250. methos avalable in rest api.
+
+251. microservices spring security in project. 
+
+252. how to configurte spring secuity in application.
+
+253.what are bean scope types
+
+254.  
+
+
+
+ 
+
+
+ 
+
+
