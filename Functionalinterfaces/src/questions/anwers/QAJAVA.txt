@@ -534,6 +534,10 @@ Application monitoring
 API Testing and management
 Team building
 
+80 . I have any employee class which is having employeename , employeeId, designation. a simple POJO class. 
+I want to use employee class object as key for the hashmap.
+
+81. tell me about concurrent hashmap.
 10. how hashmap, hashset and hashtabel works internally.
 hashset
 Differences between HashMap and HashTable in Java
@@ -1278,241 +1282,1003 @@ Should you not find helpful error messages in the logfile, please try changing t
 Please note that this change will take up to 15 minutes to take effect, so please try waiting 15 minutes before trying to call up your site and refresh it.
 
 63. what is the flow of spring bootaplication flow..??
+ Presentation Layer
+The presentation layer is the top layer of the spring boot architecture. It consists of Views. i.e., the front-end part of the application. It handles the HTTP requests and performs authentication. It is responsible for converting the JSON field’s parameter to Java Objects and vice-versa. Once it performs the authentication of the request it passes it to the next layer. i.e., the business layer.
 
-64. can spring boot be used for very large aplication
+ Business Layer
+The business layer contains all the business logic. It consists of services classes. It is responsible for validation and authorization.
 
-65. disadvantages and advantages of springboot.
+ Persistence Layer
+The persistence layer contains all the database storage logic. It is responsible for converting business objects to the database row and vice-versa.
 
-66. @RestController vs @controller
+ Database Layer
+The database layer contains all the databases such as MySql, MongoDB, etc. This layer can contain multiple databases. It is responsible for performing the CRUD operations.
 
-67. bean factory vs appplication context
+The Client makes an HTTP request(GET, PUT, POST, etc.)
+The HTTP request is forwarded to the Controller. The controller maps the request. It processes the handles and calls the server logic.
+The business logic is performed in the Service layer. The spring boot performs all the logic over the data of the database which is mapped to the spring boot model class through Java Persistence Library(JPA).
+The JSP page is returned as Response from the controller.
+
+65. disadvantages and advantages of springboot. can spring boot be used for very large aplication
+Lack of control. Spring Boot creates a lot of unused dependencies, resulting in a large deployment file;
+The complex and time-consuming process of converting a legacy or an existing Spring project to a Spring Boot application;
+Not suitable for large-scale projects. Although it’s great for working with microservices, many developers claim that Spring Boot is not suitable for building monolithic applications.
+
+
+66.@controller  vs                                                     @RestController 
+@Controller is used to mark classes as Spring MVC Controller.	       @RestController annotation is a special controller used in RESTful Web services, and it’s of @Controller and @ResponseBody annotation.
+It is a specialized version of @Component annotation.	                It is a specialized version of @Controller annotation.
+In @Controller, we can return a view in Spring Web MVC.	                In @RestController, we can not return a view.
+@Controller annotation indicates that the class is a “controller” like a web controller.	@RestController annotation indicates that class is a controller where @RequestMapping methods assume @ResponseBody semantics by default.
+In @Controller, we need to use @ResponseBody on every handler method.	In @RestController, we don’t need to use @ResponseBody on every handler method.
+It was added to Spring 2.5 version.	                                    It was added to Spring 4.0 version.
+
+67. bean factory vs                                                    appplication context
+It is a fundamental container that provides the basic functionality for managing beans.	It is an advanced container that extends the BeanFactory that provides all basic functionality and adds some advanced features.
+It is suitable to build standalone applications.	It is suitable to build Web applications, integration with AOP modules, ORM and distributed applications.
+It supports only Singleton and Prototype bean scopes.	It supports all types of bean scopes such as Singleton, Prototype, Request, Session etc.
+It does not support Annotations. In Bean Autowiring, we need to configure the properties in XML file only.	It supports Annotation based configuration in Bean Autowiring.
+This interface does not provides messaging (i18n or internationalization) functionality.	ApplicationContext interface extends MessageSource interface, thus it provides messaging (i18n or internationalization) functionality.
+BeanFactory does not support Event publication functionality.	Event handling in the ApplicationContext is provided through the ApplicationEvent class and ApplicationListener interface.
+In BeanFactory, we need to manually register BeanPostProcessors and BeanFactoryPostProcessors.	The ApplicationContext automatically registers BeanFactoryPostProcessor and BeanPostProcessor at startup.
+BeanFactory will create a bean object when the getBean() method is called thus making it Lazy initialization.	ApplicationContext loads all the beans and creates objects at the time of startup only thus making it Eager initialization.
+BeanFactory interface provides basic features only thus requires less memory. For standalone applications where the basic features are enough and when memory consumption is critical, we can use BeanFactory.	ApplicationContext provides all the basic features and advanced features, including several that are geared towards enterprise applications thus requires more memory.
 
 68. List of dulicate employee name , how to print list of map<Empname,Counter> using java 8.
+  List<String>names = new ArrayList<>();
+     names.add("sai");
+     names.add("swaroop");
+     names.add("Alex");
+     names.add("charles");
+     names.add("volvarine");
+     names.add("sai");
+     names.add("swaroop");
+     names.add("sai");
+     names.add("Tony");
+     names.add("peter");
+     names.add("sai");
+     
+     
+     Map<String,Integer>employees = new HashMap<>();
+     names.forEach(name->{
+    	 if(employees.containsKey(name)) {
+    		Integer i = employees.get(name);
+    		employees.put(name, i+1);
+    	 }
+    	 else
+    		 employees.put(name, 1);
+     });
+     System.out.println(employees);
+    
 
 69. @trasient
+transient is a variables modifier used in serialization. At the time of serialization, if we don’t want to save value of a particular variable in a file, then we use transient keyword. When JVM comes across transient keyword, it ignores original value of the variable and save default value of that variable data type.
+
+transient keyword plays an important role to meet security constraints. There are various real-life examples where we don’t want to save private data in file. Another use of transient keyword is not to serialize the variable whose value can be calculated/derived using other serialized objects or system such as age of a person, current date, etc.
+Practically we serialized only those fields which represent a state of instance, after all serialization is all about to save state of an object to a file. It is good habit to use transient keyword with private confidential fields of a class during serialization.
+class Test implements Serializable
+{
+    // Making password transient for security
+    private transient String password;
+  
+    // Making age transient as age is auto-
+    // computable from DOB and current date.
+    transient int age;
+  
+    // serialize other fields
+    private String username, email;
+    Date dob;
+  
+    // other code
+}
 
 70. what should we do if multiple services uses some dependencies in pom.xml
+We want to setup a common maven project that’s imported by any other project that needs its dependencies. At a high level to do that we need to:
 
+Create a «parent» maven file (pom.xml) - this is a pom.xml which will sit outside all of the projects that make up our microservices and allow us to tie them together - the goal is to make a common project but the easiest way to do that is to first create a parent pom.
+Create a common maven project as one of the child projects.
+Import the common dependency from any other dependencies that need it
+In a simple example where a simple «sales-service» is being built and depends on some common project, the file structure will need to reflect this. We will have something like this at the end of this guide.
+
+.
+├── pom.xml     -- the parent pom
+├── common
+│   ├── pom.xml  -- shared dependencies go in here
+│   ├── src
+└── sales-service
+    ├── pom.xml   -- will be modified to point to our own custom parent pom 
+	https://colin-riddell.github.io/post/sharing-dependencies-between-microservices/
+	
 71. If we need to configure for downloading of jar from somewhere else then. what do we need to do..??
-
+question not proper.
 72. differnce between string and string builder 
+A string is a sequence of characters. In java, objects of String are immutable which means a constant and cannot be changed once created. Initialize a String is one of the important pillars required as a pre-requisite with deeper understanding. For now, we will be justifying let us do consider the below code with three concatenation functions with three different types of parameters, String, StringBuffer, and StringBuilder. Let us clear out the understanding between them via a single java program below from which we will be drawing out conclusions from the output generated to figure out differences between String vs StringBuilder vs StringBuffer in Java.
+https://www.geeksforgeeks.org/string-vs-stringbuilder-vs-stringbuffer-in-java/
 
 73 what is sprinboot
+Spring Boot is a project that is built on the top of the Spring Framework. It provides an easier and faster way to set up, configure, and run both simple and web-based applications.
 
-74. why we use @RestController in spring boot.
-
-75. differce betweenn string and string builder.
+It is a Spring module that provides the RAD (Rapid Application Development) feature to the Spring Framework. It is used to create a stand-alone Spring-based application that you can just run because it needs minimal Spring configuration.
+Spring Boot is an open source, microservice-based Java web framework. The  Spring Boot framework creates a fully production-ready environment that is completely configurable using its prebuilt code within its codebase. The microservice architecture provides developers with a fully enclosed application, including embedded application servers.
 
 76. differnce between arraylist and linked list.
+ArrayList	LinkedList
+1) ArrayList internally uses a dynamic array to store the elements.	LinkedList internally uses a doubly linked list to store the elements.
+2) Manipulation with ArrayList is slow because it internally uses an array. If any element is removed from the array, all the other elements are shifted in memory.	Manipulation with LinkedList is faster than ArrayList because it uses a doubly linked list, so no bit shifting is required in memory.
+3) An ArrayList class can act as a list only because it implements List only.	LinkedList class can act as a list and queue both because it implements List and Deque interfaces.
+4) ArrayList is better for storing and accessing data.	LinkedList is better for manipulating data.
+5) The memory location for the elements of an ArrayList is contiguous.	The location for the elements of a linked list is not contagious.
+6) Generally, when an ArrayList is initialized, a default capacity of 10 is assigned to the ArrayList.	There is no case of default capacity in a LinkedList. In LinkedList, an empty list is created when a LinkedList is initialized.
+7) To be precise, an ArrayList is a resizable array.	LinkedList implements the doubly linked list of the list interface.
 
 77. differnce between array and arraylist.
+Array is a fixed length data structure whereas ArrayList is a variable length Collection class. We cannot change length of array once created in Java but ArrayList can be changed.
 
-78. what is hash map.
+We cannot store primitives in ArrayList, it can only store objects. But array can contain both primitives and objects in Java. Since Java 5, primitives are automatically converted in objects which is known as auto-boxing.
 
 79. will hashmap allow duplication of keys.??
+No
 
-80 . I have any employee class which is having employeename , employeeId, designation. a simple POJO class. 
-I want to use employee class object as key for the hashmap.
 
-81. tell me about concurrent hashmap.
-
-82. what are equals and hashcode methods in java. can we use these methods to other OBjects than string.  
+82. what are equals and hashcode methods in java. can we use these methods to other OBjects than string.
+yes we can use these methods in objects also. equals method checkes both objects contain same value or not.  
 
 83. is equals method is in string class.
+checks both strings have same content or not.
 
 84. what are java streams. 
+Introduced in Java 8, the Stream API is used to process collections of objects. A stream is a sequence of objects that supports various methods which can be pipelined to produce the desired result.
+The features of Java stream are –
 
-85. singleton design pattern.
+A stream is not a data structure instead it takes input from the Collections, Arrays or I/O channels.
+Streams don’t change the original data structure, they only provide the result as per the pipelined methods.
+Each intermediate operation is lazily executed and returns a stream as a result, hence various intermediate operations can be pipelined. Terminal operations mark the end of the stream and return the result.
+Different Operations On Streams-
+Intermediate Operations:
 
-86. what is your database.
+map: The map method is used to returns a stream consisting of the results of applying the given function to the elements of this stream.
+List number = Arrays.asList(2,3,4,5);
+List square = number.stream().map(x->x*x).collect(Collectors.toList());
+filter: The filter method is used to select elements as per the Predicate passed as argument.
+List names = Arrays.asList("Reflection","Collection","Stream");
+List result = names.stream().filter(s->s.startsWith("S")).collect(Collectors.toList());
+sorted: The sorted method is used to sort the stream.
+List names = Arrays.asList("Reflection","Collection","Stream");
+List result = names.stream().sorted().collect(Collectors.toList());
+Terminal Operations:
 
+collect: The collect method is used to return the result of the intermediate operations performed on the stream.
+List number = Arrays.asList(2,3,4,5,3);
+Set square = number.stream().map(x->x*x).collect(Collectors.toSet());
+forEach: The forEach method is used to iterate through every element of the stream.
+List number = Arrays.asList(2,3,4,5);
+number.stream().map(x->x*x).forEach(y->System.out.println(y));
+reduce: The reduce method is used to reduce the elements of a stream to a single value.
+The reduce method takes a BinaryOperator as a parameter.
+List number = Arrays.asList(2,3,4,5);
+int even = number.stream().filter(x->x%2==0).reduce(0,(ans,i)-> ans+i);
+
+
+ 
 87. how will you connect to database from your application.
+we will provide connection deatils of data base in the application. properties file
 
 88. what is the role of spring IOC container in depencdency injection.
+Spring IoC Container is the core of Spring Framework. It creates the objects, configures and assembles their dependencies, manages their entire life cycle. The Container uses Dependency Injection(DI) to manage the components that make up the application. It gets the information about the objects from a configuration file(XML) or Java Code or Java Annotations and Java POJO class. These objects are called Beans. Since the Controlling of Java objects and their lifecycle is not done by the developers, hence the name Inversion Of Control. 
 
 89. what is dependency injection. 
+Dependency Injection is a fundamental aspect of the Spring framework, through which the Spring container “injects” objects into other objects or “dependencies”.
+
+Simply put, this allows for loose coupling of components and moves the responsibility of managing components onto the container.
+
+Let's explore DI with Spring further here.
 
 90. Is depencdency injection done only for POJO classes in springboot
+In Spring Boot, we can use Spring Framework to define our beans and their dependency injection. The @ComponentScan annotation is used to find beans and the corresponding injected with @Autowired annotation.
 
-91. what is @component annotation.
-
-92. what is the use of @bean annotation
+this explains that not all the depencdenices mentioned in the pom.xml will be injected to a class. the classes which are @autowired will be injected.
 
 93. how @component differnnt form @bean annotation.
+@Componet is used to mention that this 
+1
+Auto detection
+It is used to explicitly declare a single bean, rather than letting Spring do it automatically. 
+If any class is annotated with @Component it will be automatically detect by using classpath scan.
+2
+Spring Container
+Bean can be created even class is outside the spring container
+We can’t create bean if class is outside spring container
+3
+Class/Method  Level Annotation
+It is a method level annotation
+It is a class level annotation
+4
+@Configuration
+It works only when class is also annotated with @Configuration
+It works without
+@Configuration annotation
+5
+Use Case
+We should use @bean, if you want specific implementation based on dynamic condition.
+We can’t write specific implementation based on dynamic condition
 
 94. JVM and JDK.
+JVM
+JVM is the abbreviation for Java virtual machine which is basically specification that provides a runtime environment in which Java byte code can be executed i.e it is something which is abstract and its implementation is independent to choose the algorithm and has been provided by Sun and other companies. It is JVM which is responsible for converting Byte code to the machine specific code. It can also run those programs which are written in other languages and compiled to Java bytecode.The JVM performs the mentioned tasks: Loads code, Verifies code, Executes code, Provides runtime environment.
+
+JRE
+JRE is Java runtime environment which is the implementation of JVM i.e the specifications which are defined in JVM are implemented and creates corresponding environment for the execution of code.JRE comprises mainly java binaries and other classes to execute the program alike of JVM it physically exists. Along with Java binaries JRE also consist of various technologies of deployment, user interfaces to interact with code executed, some base libraries for different functionalities and language and util based libraries.
+
+JDK
+JDK is abbreviation for Java Development Kit which includes all the tools, executable and binaries required to compile, debug and execute a Java Program.JDK is platform dependent i.e there is separate installers for Windows, Mac, and Unix systems.JDK includes both JVM and JRE and is entirely responsible for code execution. It is the version of JDK which represent version of Java.
 
 95. how does the JVM manages memory internally.
 
 96. differnt ways of creating objects in java. 
+Using new keyword   GFG obj = new GFG();
+Using new instance
+  Class cls = Class.forName("GFG");
+ 
+            // Creating object of main class
+            // using instance method
+            GFG obj = (GFG)cls.newInstance();
+ 
+            // Print and display
+            System.out.println(obj.name);
+Using clone() method
+GFG obj2 = (GFG)obj1.clone();
+Using deserialization
+ try {
+            // Creating object of class in main() method
+            GFG d = new GFG("GeeksForGeeks");
+ 
+            FileOutputStream f
+                = new FileOutputStream("file.txt");
+            ObjectOutputStream oos
+                = new ObjectOutputStream(f);
+            oos.writeObject(d);
+            oos.close();
+ 
+            // Freeing up memory resources
+            f.close();
+        }
+Using newInstance() method of Constructor class
+Constructor<GFG> constructor
+                = GFG.class.getDeclaredConstructor();
+ 
+            GFG r = constructor.newInstance();
+ 
+            // Custom passing
+            r.setName("GeeksForGeeks");
+            System.out.println(r.name);
 
 97. what does static keyword do
-
+https://www.geeksforgeeks.org/static-keyword-java/
 98. why main method is static 
+to run a method we need to create a object of that method. but to create a object first we need to run a method. this is a deadlock. if we make a method as static then no need to create a instance.
 
 99. what are oops concepts. 
+Pillar 1: Abstraction
 
+Data Abstraction is the property by virtue of which only the essential details are displayed to the user. The trivial or non-essential units are not displayed to the user. Ex: A car is viewed as a car rather than its individual components.
+Data Abstraction may also be defined as the process of identifying only the required characteristics of an object, ignoring the irrelevant details. The properties and behaviors of an object differentiate it from other objects of similar type and also help in classifying/grouping the object.
+Consider a real-life example of a man driving a car. The man only knows that pressing the accelerators will increase the car speed or applying brakes will stop the car, but he does not know how on pressing the accelerator, the speed is actually increasing. He does not know about the inner mechanism of the car or the implementation of the accelerators, brakes etc. in the car. This is what abstraction is. 
+In Java, abstraction is achieved by interfaces and abstract classes. We can achieve 100% abstraction using interfaces.
+
+Pillar 2: Encapsulation
+
+It is defined as the wrapping up of data under a single unit. It is the mechanism that binds together the code and the data it manipulates. Another way to think about encapsulation is that it is a protective shield that prevents the data from being accessed by the code outside this shield. 
+
+Technically, in encapsulation, the variables or the data in a class is hidden from any other class and can be accessed only through any member function of the class in which they are declared.
+In encapsulation, the data in a class is hidden from other classes, which is similar to what data-hiding does. So, the terms “encapsulation” and “data-hiding” are used interchangeably.
+Encapsulation can be achieved by declaring all the variables in a class as private and writing public methods in the class to set and get the values of the variables.
+Pillar 3: Inheritance 
+
+Inheritance is an important pillar of OOP (Object Oriented Programming). It is the mechanism in Java by which one class is allowed to inherit the features (fields and methods) of another class. 
+
+Let us discuss some frequently used important terminologies:
+
+Superclass: The class whose features are inherited is known as superclass (also known as base or parent class).
+Subclass: The class that inherits the other class is known as subclass (also known as derived or extended or child class). The subclass can add its own fields and methods in addition to the superclass fields and methods.
+Reusability: Inheritance supports the concept of “reusability”, i.e. when we want to create a new class and there is already a class that includes some of the code that we want, we can derive our new class from the existing class. By doing this, we are reusing the fields and methods of the existing class.
+Pillar 4: Polymorphism
+
+It refers to the ability of object-oriented programming languages to differentiate between entities with the same name efficiently. This is done by Java with the help of the signature and declaration of these entities. 
 100. with inheritance we will get parent functionaity to child. if we dont want some particular functionality. what should i do. we need to make that field private. if we dont want a class to be extended. what we need to do. we need to make that class as final.
 
 
 102. keyword final, finally, finalize
+The final keyword can be used with class method and variable. A final class cannot be inherited, a final method cannot be overridden and a final variable cannot be reassigned.
 
+The finally keyword is used to create a block of code that follows a try block. A finally block of code always executes, whether or not an exception has occurred. Using a finally block allows you to run any cleanup-type statements that you just wish to execute, despite what happens within the protected code.
+
+The finalize() method is used just before object is destroyed and can be called just prior to object creation.
+public class Tester {
+   public void finalize() throws Throwable{
+      System.out.println("Object garbage collected.");
+   }
+   public static void main(String[] args) {
+
+      Tester t = new Tester();
+      t = null;
+      System.gc();
+   }
+}
 103. diamond problem in java. no choice of extending  2 or more classes.
+yes in java we cannot extend 2 classes with a calss eg: class A extends B,C is not possible.
+we can overcome this with interfaces . we can implement more than 2 interfaces in java.
 
 104. do you know about anonymous array.
-
+An array in Java without any name is known as an anonymous array. It is an array just for creating and using instantly. Using an anonymous array, we can pass an array with user values without the referenced variable.
+class Test {
+    public static void main(String[] args)
+    {
+          // anonymous array
+          sum(new int[]{ 1, 2, 3 });
+    }
+   
+    public static void sum(int[] a)
+    {
+        int total = 0;
+ 
+        // using for-each loop
+        for (int i : a)
+            total = total + i;
+         
+        System.out.println("The sum is: " + total);
+    }
+}
 105. In java how to create custom exceptions
+Now, let’s see how to create a custom exception in action. Here are the steps:
+Create a new class whose name should end with Exception like ClassNameException. This is a convention to differentiate an exception class from regular ones.
+Make the class extends one of the exceptions which are subtypes of the java.lang.Exception class. Generally, a custom exception class always extends directly from the Exception class.
+Create a constructor with a String parameter which is the detail message of the exception. In this constructor, simply call the super constructor and pass the message.
+That’s it. The following is a custom exception class which is created by following the above steps:
 
+public class StudentNotFoundException extends Exception {
+ 
+    public StudentNotFoundException(String message) {
+        super(message);
+    }
+}
+
+public class StudentManager {
+ 
+    public Student find(String studentID) throws StudentNotFoundException {
+        if (studentID.equals("123456")) {
+            return new Student();
+        } else {
+            throw new StudentNotFoundException(
+                "Could not find student with ID " + studentID);
+        }
+    }
+}
+public class StudentTest {
+    public static void main(String[] args) {
+        StudentManager manager = new StudentManager();
+ 
+        try {
+ 
+            Student student = manager.find("0000001");
+ 
+        } catch (StudentNotFoundException ex) {
+            System.err.print(ex);
+        }
+    }
+}
 106. typecasting in java.
+Convert a value from one data type to another data type is known as type casting.
+Converting a lower data type into a higher one is called widening type casting. It is also known as implicit conversion or casting down. It is done automatically. It is safe because there is no chance to lose data. It takes place when:
 
+Both data types must be compatible with each other.
+The target type must be larger than the source type.
+
+byte -> short -> char -> int -> long -> float -> double  
+
+Narrowing Type Casting
+Converting a higher data type into a lower one is called narrowing type casting. It is also known as explicit conversion or casting up. It is done manually by the programmer. If we do not perform casting then the compiler reports a compile-time error.
+
+double -> float -> long -> int -> char -> short -> byte  
 107. what is threading. explain about threading.
 
 108. zagged array in java
+A jagged array is an array of arrays such that member arrays can be of different sizes, i.e., we can create a 2-D array but with a variable number of columns in each row. These types of arrays are also known as Jagged arrays. 
+syntax int arr_name[][] = new int[][]  {
+                                  new int[] {10, 20, 30 ,40},
+                                  new int[] {50, 60, 70, 80, 90, 100},
+                                  new int[] {110, 120}
+                                      };
+                                      
+                              OR                                     
+                                                         
+                    int[][] arr_name = {
+                          new int[] {10, 20, 30 ,40},
+                          new int[] {50, 60, 70, 80, 90, 100},
+                          new int[] {110, 120}
+                              };
+109. can you describe about sentence "write once and run any where".
+the code what we write in java can run any where which contains a JVM.
 
-109. ca you describe about sentence "write once and run any where".
-
-110. types of constructors in java. If there is any one parametrized Constructor present in a class, Default Constructor will not be added at Compile time. So if your program has any constructor containing parameters and no default constructor is specified then you will not be able to create object of that class using Default constructor
-
-111. what is deep copy shallow copy and clone
+110. types of constructors in java. 
+If there is any one parametrized Constructor present in a class, Default Constructor will not be added at Compile time. So if your program has any parameterised constructor containing parameters and no default constructor is specified then you will not be able to create object of that class using Default constructor. we need to explicitly define a default constructor also.
 
 112. pulic class Myclass{
-static final int counter;
+static final int counter;// this will throw error
 final int rollNo;
 public void test(){
 system.out.println(rollNO);
 }}
 counter is final and 
 rollNo is also final. so it will throw error.
-If you don't initialize or forget to initialize a blank final variable then the compiler will complain about it by throwing a compile-time error
+If you don't initialize or forget to initialize a blank static final variable then the compiler will complain about it by throwing a compile-time error
 
 
 113. Immutability in JAVA.
-
+Immutable class in java means that once an object is created, we cannot change its content. In Java, all the wrapper classes (like Integer, Boolean, Byte, Short) and String class is immutable.
 114. how to make a immutable class in java
+We can create our own immutable class as well. Prior to going ahead do go through characteristics of immutability in order to have a good understanding while implementing the same. Following are the requirements: 
 
-115. any other class than string which is immutable . wrapper classes are imutable
+The class must be declared as final so that child classes can’t be created.
+Data members in the class must be declared private so that direct access is not allowed.
+Data members in the class must be declared as final so that we can’t change the value of it after object creation.
+A parameterized constructor should initialize all the fields performing a deep copy so that data members can’t be modified with an object reference.
+Deep Copy of objects should be performed in the getter methods to return a copy rather than returning the actual object reference)
+final class Student {
+ 
+    // Member attributes of final class
+    private final String name;
+    private final int regNo;
+    private final Map<String, String> metadata;
+ 
+    // Constructor of immutable class
+    // Parameterized constructor
+    public Student(String name, int regNo,
+                   Map<String, String> metadata)
+    {
+ 
+        // This keyword refers to current instance itself
+        this.name = name;
+        this.regNo = regNo;
+ 
+        // Creating Map object with reference to HashMap
+        // Declaring object of string type
+        Map<String, String> tempMap = new HashMap<>();
+ 
+        // Iterating using for-each loop
+        for (Map.Entry<String, String> entry :
+             metadata.entrySet()) {
+            tempMap.put(entry.getKey(), entry.getValue());
+        }
+ 
+        this.metadata = tempMap;
+    }
+ 
+    // Method 1
+    public String getName() { return name; }
+ 
+    // Method 2
+    public int getRegNo() { return regNo; }
+   
+    // Note that there should not be any setters
+ 
+    // Method 3
+    // User -defined type
+    // To get meta data
+    public Map<String, String> getMetadata()
+    {
+ 
+        // Creating Map with HashMap reference
+        Map<String, String> tempMap = new HashMap<>();
+ 
+        for (Map.Entry<String, String> entry :
+             this.metadata.entrySet()) {
+            tempMap.put(entry.getKey(), entry.getValue());
+        }
+        return tempMap;
+    }
+}
+ 
+// Class 2
+// Main class
+class GFG {
+ 
+    // Main driver method
+    public static void main(String[] args)
+    {
+ 
+        // Creating Map object with reference to HashMap
+        Map<String, String> map = new HashMap<>();
+ 
+        // Adding elements to Map object
+        // using put() method
+        map.put("1", "first");
+        map.put("2", "second");
+ 
+        Student s = new Student("ABC", 101, map);
+ 
+        // Calling the above methods 1,2,3 of class1
+        // inside main() method in class2 and
+        // executing the print statement over them
+        System.out.println(s.getName());
+        System.out.println(s.getRegNo());
+        System.out.println(s.getMetadata());
+ 
+        // Uncommenting below line causes error
+        // s.regNo = 102;
+ 
+        map.put("3", "third");
+        // Remains unchanged due to deep copy in constructor
+        System.out.println(s.getMetadata());
+        s.getMetadata().put("4", "fourth");
+        // Remains unchanged due to deep copy in getter
+        System.out.println(s.getMetadata());
+    }
+}
+https://www.geeksforgeeks.org/create-immutable-class-java/#:~:text=Immutable%20class%20in%20java%20means,and%20String%20class%20is%20immutable.
+
+115. any other class than string which is immutable .
+ wrapper classes are imutable
 
 116. String s = new String("ABC");
 s = new String("xyz");
 System.out.println(s);
 
+xyz is output
+
 117. what do you know about string constant pool in java
+String pool is nothing but a storage area in Java heap where string literals stores. It is also known as String Intern Pool or String Constant Pool. It is just like object allocation. By default, it is empty and privately maintained by the Java String class.
 Remember that all the String literals created with the new keyword take place in the Java heap, not in the String pool.
+Whenever we create a string the string object occupies some space in the heap memory. Creating a number of strings may increase the cost and memory too which may reduce the performance also.
+
+The JVM performs some steps during the initialization of string literals that increase the performance and decrease the memory load. To decrease the number of String objects created in the JVM the String class keeps a pool of strings.
+
+When we create a string literal, the JVM first check that literal in the String pool. If the literal is already present in the pool, it returns a reference to the pooled instance. If the literal is not present in the pool, a new String object takes place in the String pool.
 
 118. when we create a new String using new keyword. where it is stored. In string constant pool or heap area.
 Remember that all the String literals created with the new keyword take place in the Java heap, not in the String pool.
 
-119. what will trainsinet keyword do in JAVA
-transient is a variables modifier used in serialization. At the time of serialization, if we don’t want to save value of a particular variable in a file, then we use transient keyword. When JVM comes across transient keyword, it ignores original value of the variable and save default value of that variable data type.
-
-
-120. what is serialization and deserialization in JAVA. where do we use it..??
 
 121. what is compile time constant in java. 
+A Java variable is a compile-time constant if it's of a primitive type or String, declared final, initialized within its declaration, and with a constant expression.
 
+Strings are a special case on top of the primitive types because they are immutable and live in a String pool. Therefore, all classes running in an application can share String values.
+
+The term compile-time constants include class constants, but also instance and local variables defined using constant expressions:
+public final int maximumLoginAttempts = 5;
+
+public static void main(String[] args) {
+    PrintWriter printWriter = System.console().writer();
+    printWriter.println(ClassConstants.DEFAULT_USERNAME);
+
+    CompileTimeVariables instance = new CompileTimeVariables();
+    printWriter.println(instance.maximumLoginAttempts);
+
+    final String username = "baeldung" + "-" + "user";
+    printWriter.println(username);
+}
 122. what is memory leak.
-
+In Java, the memory leak is a situation when the garbage collector does not recognize the unused objects and they remain in the memory indefinitely that reduces the amount of memory allocated to the application. Because the unused objects still being referenced that may lead to OutOfMemoryError. It also affects the reliability of the application. The following figure represents the memory leak.
 123. what are wrapper class.
 
-124. what is autoboxing and autounboxing.
+A Wrapper class is a class whose object wraps or contains primitive data types. When we create an object to a wrapper class, it contains a field and in this field, we can store primitive data types. In other words, we can wrap a primitive value into a wrapper class object.
 
+Need of Wrapper Classes
+
+They convert primitive data types into objects. Objects are needed if we wish to modify the arguments passed into a method (because primitive types are passed by value).
+The classes in java.util package handles only objects and hence wrapper classes help in this case also.
+Data structures in the Collection framework, such as ArrayList and Vector, store only objects (reference types) and not primitive types.
+An object is needed to support synchronization in multithreading.
+
+124. what is autoboxing and autounboxing.
+Autoboxing: Automatic conversion of primitive types to the object of their corresponding wrapper classes is known as autoboxing. For example – conversion of int to Integer, long to Long, double to Double etc.
+Example:
+
+
+// Java program to demonstrate Autoboxing
+  
+import java.util.ArrayList;
+class Autoboxing
+{
+    public static void main(String[] args)
+    {
+        char ch = 'a';
+  
+        // Autoboxing- primitive to Character object conversion
+        Character a = ch;
+  
+        ArrayList<Integer> arrayList = new ArrayList<Integer>();
+  
+        // Autoboxing because ArrayList stores only objects
+        arrayList.add(25);
+  
+        // printing the values from object
+        System.out.println(arrayList.get(0));
+    }
+}
 125. what is microservices
+Microservices - also known as the microservice architecture - is an architectural style that structures an application as a collection of services that are
+
+Highly maintainable and testable
+Loosely coupled
+Independently deployable
+Organized around business capabilities
+Owned by a small team
+The microservice architecture enables the rapid, frequent and reliable delivery of large, complex applications. It also enables an organization to evolve its technology stack.
 
 126. why do we go for micro services. we can create one big services.
+Highly maintainable and testable
+Loosely coupled
+Independently deployable
+Organized around business capabilities
+Owned by a small team
+The microservice architecture enables the rapid, frequent and reliable delivery of large, complex applications. It also enables an organization to evolve its technology stack.
 
 127. what is database. what is mysql database
+A database is a separate application that stores a collection of data. Each database has one or more distinct APIs for creating, accessing, managing, searching and replicating the data it holds.
+Other kinds of data stores can also be used, such as files on the file system or large hash tables in memory but data fetching and writing would not be so fast and easy with those type of systems.
+Nowadays, we use relational database management systems (RDBMS) to store and manage huge volume of data. This is called relational database because all the data is stored into different tables and relations are established using primary keys or other keys known as Foreign Keys.
+A Relational DataBase Management System (RDBMS) is a software that −
+Enables you to implement a database with tables, columns and indexes.
+Guarantees the Referential Integrity between rows of various tables.
+Updates the indexes automatically.
+Interprets an SQL query and combines information from various tables.
 
+MySQL is a fast, easy-to-use RDBMS
+ being used for many small and big businesses. MySQL is developed, marketed and supported by MySQL AB, which is a Swedish company. MySQL is becoming so popular because of many good reasons −
+MySQL is released under an open-source license. So you have nothing to pay to use it.
+MySQL is a very powerful program in its own right. It handles a large subset of the functionality of the most expensive and powerful database packages.
+MySQL uses a standard form of the well-known SQL data language.
+MySQL works on many operating systems and with many languages including PHP, PERL, C, C++, JAVA, etc.
+MySQL works very quickly and works well even with large data sets.
+MySQL is very friendly to PHP, the most appreciated language for web development.
+MySQL supports large databases, up to 50 million rows or more in a table. The default file size limit for a table is 4GB, but you can increase this (if your operating system can handle it) to a theoretical limit of 8 million terabytes (TB).
+MySQL is customizable. The open-source GPL license allows programmers to modify the MySQL software to fit their own specific environments.
+
+AD
 128. what clauses you use in SQL
+1. GROUP BY
+SQL GROUP BY statement is used to arrange identical data into groups. The GROUP BY statement is used with the SQL SELECT statement.
+The GROUP BY statement follows the WHERE clause in a SELECT statement and precedes the ORDER BY clause.
+The GROUP BY statement is used with aggregation function.
+SELECT COMPANY, COUNT(*)  
+FROM PRODUCT_MAST   
+GROUP BY COMPANY;
+
+ HAVING
+HAVING clause is used to specify a search condition for a group or an aggregate.
+Having is used in a GROUP BY clause. If you are not using GROUP BY clause then you can use HAVING function like a WHERE clause.
+selECT COMPANY, COUNT(*)  
+FROM PRODUCT_MAST   
+GROUP BY COMPANY  
+HAVING COUNT(*)>2;
+
+3. ORDER BY
+The ORDER BY clause sorts the result-set in ascending or descending order.
+It sorts the records in ascending order by default. DESC keyword is used to sort the records in descending order.
+Syntax:SELECT *  
+FROM CUSTOMER  
+ORDER BY NAME;
 
 129. what is maven why do we use it.
+mave is a build tool. maven will download all the depencdency you mention in pom.xml file and builds the project for you.
 
 130. what are design patterns.
+https://www.javatpoint.com/design-patterns-in-java
+clearly read about it. there are many design patterns. 
 
 131. collections . why do we use collection
+Collection: Collection is a interface present in java.util.package. It is used to represent a group of individual objects as a single unit. It is similar to the container in the C++ language. The collection is considered as the root interface of the collection framework. It provides several classes and interfaces to represent a group of individual objects as a single unit. 
+
+The List, Set, and Queue are the main sub-interfaces of the collection interface. The map interface is also part of the java collection framework, but it doesn’t inherit the collection of the interface. The add(), remove(), clear(), size(), and contains() are the important methods of the Collection interface.
+
+Declaration:
+
+public interface Collection<E> extends Iterable<E>
+
+Type Parameters: E - the type of elements returned by this iterator
+Collections: Collections is a utility class present in java.util.package. It defines several utility methods like sorting and searching which is used to operate on collection. It has all static methods. These methods provide much-needed convenience to developers, allowing them to effectively work with Collection Framework. For example, It has a method sort() to sort the collection elements according to default sorting order, and it has a method min(), and max() to find the minimum and maximum value respectively in the collection elements.
+
+Declaration:
+
+public class Collections extends Object
+Collection vs Collections:                                                           
+
+                                  Collection	                                          Collections
+It is an interface.	It is a utility class.
+It is used to represent a group of individual objects as a single unit. 	It defines several utility methods that are used to operate on collection.
+The Collection is an interface that contains a static method since java8. The Interface can also contain abstract and default methods.	It contains only static methods.
 
 132. collection is a interface or class.
-
+collection is a interface. above question have detailed aswer.
 133. do you know collections concept.
 
-134. what is differnce between array and arraylist.
 
-135. is array is fied size. 
+135. is array is fiexed size.  yes 
+
 
 136. does map belongs to collection or not..??
-
+The map interface is present in java.util package represents a mapping between a key and a value. The Map interface is not a subtype of the Collection interface. Therefore it behaves a bit differently from the rest of the collection types. A map contains unique keys.
 137. will map implements collection interface
+Collections in any language is an interface that stores similar data type objects and provides an iteration functionality. The common extensions of Collection are List and Set.
 
+The Map is a well-known data structure used to store key-value pairs where keys will be unique.
+We can take a reference of any language but let's look at the example of Java for reference as Collection Framework from Java is very popular.
+
+Java has Iterable interface which is extended by Collection. The Collection is further extended by List, Queue and Set which has their different-different implementations but the unique thing notice is that the Map interface doesn't extend Collection interface.
+Because they are of an incompatible type.
+List, Set and Queue are a collection of similar kind of objects but just values where a Map is a collection of key and value pairs.
+
+List Set and Queue have add as a function which takes a value as param to add an element whereas Map has put as a function which takes a key and a value as params to add a key-value pair.
+
+List, Set and Queue provide iterate functionality over the value whereas Maps has keys to iterate over which is ultimately a Set and Values as Collection.
 138. can value of a map can be another map..??
  
 139. what is covarient return type. 
+The covariant return type specifies that the return type may vary in the same direction as the subclass.
 
+Before Java5, it was not possible to override any method by changing the return type. But now, since Java5, it is possible to override method by changing the return type if subclass overrides any method whose return type is Non-Primitive but it changes its return type to subclass type. Let's take a simple example:
+Simple example of Covariant Return Type
+FileName: B1.java
+
+class A{    
+A get(){return this;}    
+}    
+    
+class B1 extends A{    
+@Override  
+B1 get(){return this;}    
+void message(){System.out.println("welcome to covariant return type");}    
+    
+public static void main(String args[]){    
+new B1().get().message();    
+}    
+}    
 140.what is SDLC 
-
+SDLC stands for Software Development Life Cycle. SDLC is a process that consists of a series of planned activities to develop or alter the Software Products. This tutorial will give you an overview of the SDLC basics, SDLC models available and their application in the industry. This tutorial also elaborates on other related methodologies like Agile, RAD and Prototyping
 141. what is differnce between waterfall and agaile methodlogy.
+Waterfall vs Agile Key Difference
+Waterfall is a Liner Sequential Life Cycle Model whereas Agile is a continuous iteration of development and testing in the software development process.
+In Agile vs Waterfall difference, the Agile methodology is known for its flexibility whereas Waterfall is a structured software development methodology.
+Comparing the Waterfall methodology vs Agile which follows an incremental approach whereas the Waterfall is a sequential design process.
+Agile performs testing concurrently with software development whereas in Waterfall methodology testing comes after the “Build” phase.
+Agile allows changes in project development requirement whereas Waterfall has no scope of changing the requirements once the project development starts.
+Advantages of Waterfall Model:
+It is one the easiest model to manage. Because of its nature, each phase has specific deliverables and a review process.
+It works well for smaller size projects where requirements are easily understandable.
+Faster delivery of the project
+Process and results are well documented.
+Easily adaptable method for shifting teams
+This project management methodology is beneficial to manage dependencies.
+Advantages of the Agile Model:
+It is focused client process. So, it makes sure that the client is continuously involved during every stage.
+Agile teams are extremely motivated and self-organized so it likely to provide a better result from the development projects.
+Agile software development method assures that quality of the development is maintained
+The process is completely based on the incremental progress. Therefore, the client and team know exactly what is complete and what is not. This reduces risk in the development process.
+Limitations of Waterfall Model:
+It is not an ideal model for a large size project
+If the requirement is not clear at the beginning, it is a less effective method.
+Very difficult to move back to makes changes in the previous phases.
+The testing process starts once development is over. Hence, it has high chances of bugs to be found later in development where they are expensive to fix.
+Limitations of Agile Model
+It is not useful method for small development projects.
+It requires an expert to take important decisions in the meeting.
+Cost of implementing an agile method is little more compared to other development methodologies.
+The project can easily go off track if the project manager is not clear what outcome he/she wants.
+Difference between Agile and Waterfall Model:
+Below is a difference between Agile and Waterfall methodologies:
+
+Agile	Waterfall
+It separates the project development lifecycle into sprints.	Software development process is divided into distinct phases.
+It follows an incremental approach	Waterfall methodology is a sequential design process.
+Agile methodology is known for its flexibility.	Waterfall is a structured software development methodology so most times it can be quite rigid.
+Agile can be considered as a collection of many different projects.	Software development will be completed as one single project.
+Agile is quite a flexible method which allows changes to be made in the project development requirements even if the initial planning has been completed.	There is no scope of changing the requirements once the project development starts.
+Agile methodology, follow an iterative development approach because of this planning, development, prototyping and other software development phases may appear more than once.	All the project development phases like designing, development, testing, etc. are completed once in the Waterfall model.
+Test plan is reviewed after each sprint	The test plan is rarely discussed during the test phase.
+Agile development is a process in which the requirements are expected to change and evolve.	The method is ideal for projects which have definite requirements and changes not at all expected.
+In Agile methodology, testing is performed concurrently with software development.	In this methodology, the “Testing” phase comes after the “Build” phase
+Agile introduces a product mindset where the software product satisfies needs of its end customers and changes itself as per the customer’s demands.	This model shows a project mindset and places its focus completely on accomplishing the project.
+Agile methdology works exceptionally well with Time & Materials or non-fixed funding. It may increase stress in fixed-price scenarios.	Reduces risk in the firm fixed price contracts by getting risk agreement at the beginning of the process.
+Prefers small but dedicated teams with a high degree of coordination and synchronization.	Team coordination/synchronization is very limited.
+Products owner with team prepares requirements just about every day during a project.	Business analysis prepares requirements before the beginning of the project.
+Test team can take part in the requirements change without problems.	It is difficult for the test to initiate any change in requirements.
+Description of project details can be altered anytime during the SDLC process.	Detail description needs to implement waterfall software development approach.
+The Agile Team members are interchangeable, as a result, they work faster. There is also no need for project managers because the projects are managed by the entire team	In the waterfall method, the process is always straightforward so, project manager plays an essential role during every stage of SDLC.
 
 142. what do you do in aws
 
 143. what is garbage collection in java
-
+Java garbage collection is the process by which Java programs perform automatic memory management. Java programs compile to bytecode that can be run on a Java Virtual Machine, or JVM for short. When Java programs run on the JVM, objects are created on the heap, which is a portion of memory dedicated to the program.
 144. which collection you used in your project.
+hashmap.arraylist.
 
-145. how hash map work internally 
 
-146. what is differnce between arraylist and linkedList.
+
 
 147. what happens if linked list is full. will linked list have capacity. will arraylist have capacity. 
+linked list dont have any capacity. 
+ArrayList class is a resizable array, present in java.util package. The difference between an array and an ArrayList in Java, is that the size of an array cannot be modified (i.e. if you want to append/add or remove element(s) to/from an array, you have to create a new array. However, elements can be added/appended or removed from an ArrayList without the need to create a new array.
+
+Whenever an instance of ArrayList in Java is created then by default the capacity of Arraylist is 10. Since ArrayList is a growable array, it automatically resizes itself whenever a number of elements in ArrayList grow beyond a threshold. However, ensureCapacity() method of java.util.ArrayList class can be used to increase the capacity of an ArrayList instance, if necessary, to ensure that it can hold at least the number of elements specified by the minimum capacity argument.
+
 
 148. what is a marker interface. then what is its use. 
+A marker interface is an interface that has no methods or constants inside it. It provides run-time type information about objects, so the compiler and JVM have additional information about the object. A marker interface is also called a tagging interface.
+marker interface is used to provide permissions 
 
+if(hashMapDemo instanceof HashMapDemo) {
+//    	 thneprovide access
+     }
 
-
-149. class A{
-public int m1(int b )throws FileNOtFoundExcpetion{
-return b; 
-}
-}
-
-class B extends A{
- public int m1(int b)throws IOexception{
-return b;}
-}
-what is the output of this code.
- 
-150.
-public class TEst{
- public static void main (String[] args){
-sum(5,5);
-}
-public long sum(long a,long b){
-return a+b;}
-public long sum (int a,int b){
-return a+b;}
-}
-to call those methods first we need to create a object.
 
 151 differnce between IS-A relationship and Has-A relationship. in java
+A relationship in Java means different relations between two or more classes. For example, if a class Bulb inherits another class Device, then we can say that Bulb is having is-a relationship with Device, which implies Bulb is a device.  
 
+In Java, we have two types of relationship:
+
+Is-A relationship: Whenever one class inherits another class, it is called an IS-A relationship.
+Has-A relationship: Whenever an instance of one class is used in another class, it is called HAS-A relationship.
 152. diffence between comparable and comparator.
+Difference between Comparable and Comparator
+Comparable and Comparator both are interfaces and can be used to sort collection elements.
 
-153. what are the cursors in in java
+However, there are many differences between Comparable and Comparator interfaces that are given below.
 
+Comparable	Comparator
+1) Comparable provides a single sorting sequence. In other words, we can sort the collection on the basis of a single element such as id, name, and price.	The Comparator provides multiple sorting sequences. In other words, we can sort the collection on the basis of multiple elements such as id, name, and price etc.
+2) Comparable affects the original class, i.e., the actual class is modified.	Comparator doesn't affect the original class, i.e., the actual class is not modified.
+3) Comparable provides compareTo() method to sort elements.	Comparator provides compare() method to sort elements.
+4) Comparable is present in java.lang package.	A Comparator is present in the java.util package.
+5) We can sort the list elements of Comparable type by Collections.sort(List) method.	We can sort the list elements of Comparator type by Collections.sort(List, Comparator) method.
+//Java Program to demonstrate the use of Java Comparable.  
+//Creating a class which implements Comparable Interface  
+import java.util.*;  
+import java.io.*;  
+class Student implements Comparable<Student>{  
+int rollno;  
+String name;  
+int age;  
+Student(int rollno,String name,int age){  
+this.rollno=rollno;  
+this.name=name;  
+this.age=age;  
+}  
+public int compareTo(Student st){  
+if(age==st.age)  
+return 0;  
+else if(age>st.age)  
+return 1;  
+else  
+return -1;  
+}  
+}  
+//Creating a test class to sort the elements  
+public class TestSort3{  
+public static void main(String args[]){  
+ArrayList<Student> al=new ArrayList<Student>();  
+al.add(new Student(101,"Vijay",23));  
+al.add(new Student(106,"Ajay",27));  
+al.add(new Student(105,"Jai",21));  
+  
+Collections.sort(al);  
+for(Student st:al){  
+System.out.println(st.rollno+" "+st.name+" "+st.age);  
+}  
+}  
+}  
+class Student{  
+int rollno;  
+String name;  
+int age;  
+Student(int rollno,String name,int age){  
+this.rollno=rollno;  
+this.name=name;  
+this.age=age;  
+}  
+}  
+AgeComparator.java
+import java.util.*;  
+class AgeComparator implements Comparator<Student>{  
+public int compare(Student s1,Student s2){  
+if(s1.age==s2.age)  
+return 0;  
+else if(s1.age>s2.age)  
+return 1;  
+else  
+return -1;  
+}  
+}  
+NameComparator.java
+This class provides comparison logic based on the name. In such case, we are using the compareTo() method of String class, which internally provides the comparison logic.
+
+import java.util.*;  
+class NameComparator implements Comparator<Student>{  
+public int compare(Student s1,Student s2){  
+return s1.name.compareTo(s2.name);  
+}  
+}  
+TestComparator.java
+In this class, we are printing the values of the object by sorting on the basis of name and age.
+
+//Java Program to demonstrate the use of Java Comparator  
+import java.util.*;  
+import java.io.*;  
+class TestComparator{  
+public static void main(String args[]){  
+//Creating a list of students  
+ArrayList<Student> al=new ArrayList<Student>();  
+al.add(new Student(101,"Vijay",23));  
+al.add(new Student(106,"Ajay",27));  
+al.add(new Student(105,"Jai",21));  
+  
+System.out.println("Sorting by Name");  
+//Using NameComparator to sort the elements  
+Collections.sort(al,new NameComparator());  
+//Traversing the elements of list  
+for(Student st: al){  
+System.out.println(st.rollno+" "+st.name+" "+st.age);  
+}  
+  
+System.out.println("sorting by Age");  
+//Using AgeComparator to sort the elements  
+Collections.sort(al,new AgeComparator());  
+//Travering the list again  
+for(Student st: al){  
+System.out.println(st.rollno+" "+st.name+" "+st.age);  
+}  
+  
+}  
+}  
+153. what are the cursors in in sql
+A cursor in SQL is a temporary work area created in system memory when a SQL statement is executed. A SQL cursor is a set of rows together with a pointer that identifies a current row. It is a database object to retrieve data from a result set one row at a time. It is useful when we want to manipulate the record of a table in a singleton method, in other words, one row at a time. In other words, a cursor can hold more than one row but can process only one row at a time. The set of rows the cursor holds is called the active set.
+ 
+Types of Cursors in SQL
+ 
+There are the following two types of cursors in SQL:
+Implicit Cursor
+Explicit Cursor
+Implicit Cursor
+ 
+These types of cursors are generated and used by the system during the manipulation of a DML query (INSERT, UPDATE, and DELETE). An implicit cursor is also generated by the system when a single row is selected by a SELECT command.
+ 
+Explicit Cursor
+ 
+This type of cursor is generated by the user using a SELECT command. An explicit cursor contains more than one row, but only one row can be processed at a time. An explicit cursor moves one by one over the records. An explicit cursor uses a pointer that holds the record of a row. After fetching a row, the cursor pointer moves to the next row.
+ 
+Main components of Cursors
+ 
+Each cursor contains the followings 5 parts,
+Declare Cursor: In this part, we declare variables and return a set of values.
+Open: This is the entering part of the cursor.
+Fetch: Used to retrieve the data row by row from a cursor.
+Close: This is an exit part of the cursor and used to close a cursor.
+Deallocate: In this part, we delete the cursor definition and release all the system resources associated with the cursor.
 154. what is concurrent modification excpetion. 
+The ConcurrentModificationException occurs when an object is tried to be modified concurrently when it is not permissible. This exception usually comes when one is working with Java Collection classes.
 
+For Example - It is not permissible for a thread to modify a Collection when some other thread is iterating over it. This is because the result of the iteration becomes undefined with it. Some implementation of the Iterator class throws this exception, including all those general-purpose implementations of Iterator which are provided by the JRE. Iterators which do this are called fail-fast as they throw the exception quickly as soon as they encounter such situation rather than facing undetermined behavior of the collection any time in the future.
 154. what is the differnce bettwen throw and throws keyword
+The throw and throws is the concept of exception handling where the throw keyword throw the exception explicitly from a method or a block of code whereas the throws keyword is used in signature of the method.
 
 155. what happens if we write a method which throws exception inside a try catch block.
+exception goes to catch block if there is no catch block then the control goes to the method which called this method.
 
-156. features of java 8.
 
 157.  what makes java functional programming.
+Declarative programming, as such, leads to very concise and readable programs. Functional programming, being a subset of declarative programming, offers several constructs like higher-order functions, function composition, and function chaining. Think of the benefits that Stream API has brought into Java 8 for handling data manipulations.
+
+But don't get tempted to switch over unless completely ready. Please note that functional programming is not a simple design pattern that we can immediately use and benefit from. Functional programming is more of a change in how we reason about problems and their solutions and how to structure the algorithm.
 
 158. where do we use this keyword and super key word
+this keyword is used to refer any variable of instance. super is used to refer the super class variable.
+
 
 159. can we use this or super  keyword in static method. 
-
-160.  write a number to reverse a number. 
+NO
+160.  write a program to reverse a number. 
 
 161. what are the ways of creating thread. which is the best way of creating a trhead
+thead can be created by extending thread class are implementing runnable interface
 
 162. how do we start a thread.
 
@@ -1520,234 +2286,384 @@ to call those methods first we need to create a object.
 
 164. what is join method.
 
-165. what is a singleton class. how to create a singleton class.
+166. why we use springboot over spring. 
+Spring Boot is basically an extension of the Spring framework, which eliminates the boilerplate configurations required for setting up a Spring application.
 
-166. wny we use springboot over spring. 
+It takes an opinionated view of the Spring platform, which paves the way for a faster and more efficient development ecosystem.
 
-167. what are the types of joins 
+Here are just a few of the features in Spring Boot:
 
-168. what is polymorphisum. polymorphisum wit out inheritance. overriding 
+Opinionated ‘starter' dependencies to simplify the build and application configuration
+Embedded server to avoid complexity in application deployment
+Metrics, Health check, and externalized configuration
+Automatic config for Spring functionality – whenever possible
+Let's get familiar with both of these frameworks step by step.
+
+167. what are the types of joins in sql
+(INNER) JOIN: Returns records that have matching values in both tables
+LEFT (OUTER) JOIN: Returns all records from the left table, and the matched records from the right table
+RIGHT (OUTER) JOIN: Returns all records from the right table, and the matched records from the left table
+FULL (OUTER) JOIN: Returns all records when there is a match in either left or right table
+
+168. what is polymorphisum.: taking many forms
+ 
+polymorphisum without inheritance. overloding. 
 
 169. what is data hiding and data binding. 
-
+Encapsulation is a way of binding together the data and the code that operates on the data. It is a mechanism used to hide the data implementation details while exposing the data abstraction to the outside world. The process of hiding information behind a well-defined interface is known as encapsulation.2
 170. what is copy constructor.
+A copy constructor in a Java class is a constructor that creates an object using another object of the same Java class.
+
+That's helpful when we want to copy a complex object that has several fields, or when we want to make a deep copy of an existing object.
+public class Employee {
+    private int id;
+    private String name;
+  
+    public Employee(Employee employee) {
+    }
+}
+Then, we copy each field of the input object into the new instance:
+
+public class Employee {
+    private int id;
+    private String name;
+    
+    public Employee(Employee employee) {
+        this.id = employee.id;
+        this.name = employee.name;
+    }
+}
 
 171. what is exception handling. 
+The Exception Handling in Java is one of the powerful mechanism to handle the runtime errors so that the normal flow of the application can be maintained.
 
-172. what is garbage collection.
+In this tutorial, we will learn about Java exceptions, it's types, and the difference between checked and unchecked exceptions.
 
-173. String constant pool .what is garbage collector
-
-174. public class DEmo{
-  public static void main(String[] arr){
-
-System.out.println("main1");
-}
-
-public static void main(String arr){
-
-System.out.println("main2");
-}
-}
-
-
-what is the output of the code.
-
-
-175 .what are annotations in springboot
 
 176. what is scop of a bean
+In this quick tutorial, we'll learn about the different types of bean scopes in the Spring framework.
 
-177. what is autowireing.
+The scope of a bean defines the life cycle and visibility of that bean in the contexts we use it.
 
-178. what is @ component. 
+The latest version of the Spring framework defines 6 types of scopes:
+
+singleton
+prototype
+request
+session
+application
+websocket
+
 
 179. what is a constructor way ofcreating bean
+As of Spring 4.3, classes with a single constructor can omit the @Autowired annotation. This is a nice little bit of convenience and boilerplate removal.
+
+On top of that, also starting with 4.3, we can leverage the constructor-based injection in @Configuration annotated classes. In addition, if such a class has only one constructor, we can omit the @Autowired annotation as well.
 
 180. limitations of autowring.
+Autowiring is less exact than explicit wiring. Spring is careful to avoid guessing in the case of ambiguity that might have unexpected results, the relationships between Spring-managed objects are no longer document explicitly.
+Wiring information may not be available to tools that generate documentation from a Spring container.
+Multiple bean definition within the container may match the type specified by the constructor or setter method argument to be autowired.
 
-181. what is cursor in sql.
 
-   
-   employeeinfo {
-    empId 
-	first name
-	lastname
-	department
-	project
-	adress
-	dob
-	gender
-	
-   }
-   
-   EmplyPosition
-   {
-    empId
-	
-	Position
-	
-	DateOf join
-	
-	salary
-   
-   }
-   
-   SELECT * from EmplyPosition
-   WHERE LIMIT N
-   
-   Write a query to fetch all employees names who also hold the managerial position.
-   
-   SELECT firstname from employeeinfo   
-   WHERE EmplyPosition IS  "managerial"
-   ON employeeinfo.empID = EmplyPosition.empID.
-   
-   Write a query to calculate the even and odd records from a table.
-
-182. feth top N reocrds from empposition
-
-183. write a query to fetvh all employees names who also hold the mangerial positon
-
-184. write a query to calculate the even and odd records from a tabel.
-
-185. what is springboot
-
-186. why we are using @RestController.
-
-187. what is a singleton class
-
-188. what is @SpringBootApplication annotation.
-
-189. flow a springboot application flow -> controller to impl. returned 
-
-190. what is use of @service annotation
-
-191. what is maven
-
-192.  wat is depencdency injection
-
-193. what is a string in java
 
 194. Is string a class or keyword.
+class
 
-195. What are the differnt ways to create.
-
-196. what is immutable and mutable
-
-197. what is thread in java
-
-198. what is runnable interface.
-
-199. join method usage..??
- 
-200. what is the keyword and finalise 
 
 201. what is restful webservices.
+REST stands for REpresentational State Transfer.
 
+REST is an architectural style not a protocol.
+
+Advantages of RESTful Web Services
+Fast: RESTful Web Services are fast because there is no strict specification like SOAP. It consumes less bandwidth and resource.
+
+Language and Platform independent: RESTful web services can be written in any programming language and executed in any platform.
+
+Can use SOAP: RESTful web services can use SOAP web services as the implementation.
+
+Permits different data format: RESTful web service permits different data format such as Plain Text, HTML, XML and JSON.
 202. what is acutator in springboot.
 
-203. @sterioType annotations
 
-204. bean factory and application context
-
-205. Aplkication. properties file
-
-206. where we put our depencdenices in spring boot.
-
-207. java 8 concepts. 
+206. where we put our depencdenices in spring boot. in pom.xml
 
 208. what is functional interface..??
+A functional interface is an interface that contains only one abstract method. They can have only one functionality to exhibit. From Java 8 onwards, lambda expressions can be used to represent the instance of a functional interface. A functional interface can have any number of default methods. Runnable, ActionListener, Comparable are some of the examples of functional interfaces. 
 
-209 differnce between array and arraylist 
+Functional Interface is additionally recognized as Single Abstract Method Interfaces. In short, they are also known as SAM interfaces. Functional interfaces in Java are the new feature that provides users with the approach of fundamental programming. 
 
+Functional interfaces are included in Java SE 8 with Lambda expressions and Method references in order to make code more readable, clean, and straightforward. Functional interfaces are interfaces that ensure that they include precisely only one abstract method. Functional interfaces are used and executed by representing the interface with an annotation called @FunctionalInterface. As described earlier, functional interfaces can contain only one abstract method. However, they can include any quantity of default and static methods. 
+
+In Functional interfaces, there is no need to use the abstract keyword as it is optional to use the abstract keyword because, by default, the method defined inside the interface is abstract only. We can also call Lambda expressions as the instance of functional interface.
+
+Before Java 8, we had to create anonymous inner class objects or implement these interfaces.
 210. differnce between set and map.
+Difference Between Set and Map Interfaces
+Both interfaces are used to store the collection of objects as a single unit. The main difference between Set and Map is that Set contains only data elements, and the Map contains the data in the key-value pair, so Map contains key and its value.
+
+Now, let's understand some major differences between both of them.
+
+S.No.	Set                                                	Map 
+1.	Set is used to construct the mathematical Set in Java.	Map is used to do mapping in the database.
+2.	It cannot contain repeated values.	It can have the same value for different keys.
+3.	Set doesn't allow us to add the same elements in it. Each class that implements the Set interface contains only the unique value.	Map contains unique key and repeated values. In Map, one or more keys can have the same values, but two keys cannot be the same.
+4.	We can easily iterate the Set elements using the keyset() and the entryset() method of it.	Map elements cannot be iterated. We need to convert Map into Set for iterating the elements.
+5.	Insertion order is not maintained by the Set interface. However, some of its classes, like LinkedHashSet, maintains the insertion order.	The insertion order is also not maintained by the Map. However, some of the Map classes like TreeMap and LinkedHashMap does the same.
 
 211. in map duplication will be allowed. 
+duplication of values allowed but duplication of keys not allowed.
 
 212. what is generics.
+Generics means parameterized types. The idea is to allow type (Integer, String, … etc., and user-defined types) to be a parameter to methods, classes, and interfaces. Using Generics, it is possible to create classes that work with different data types. An entity such as class, interface, or method that operates on a parameterized type is a generic entity.
+The Object is the superclass of all other classes, and Object reference can refer to any object. These features lack type safety. Generics add that type of safety feature. We will discuss that type of safety feature in later examples.
 
-213. Spring and Springboot
+Generics in Java are similar to templates in C++. For example, classes like HashSet, ArrayList, HashMap, etc., use generics very well. There are some fundamental differences between the two approaches to generic types. 
+Generic Method: Generic Java method takes a parameter and returns some value after performing a task. It is exactly like a normal function, however, a generic method has type parameters that are cited by actual type. This allows the generic method to be used in a more general way. The compiler takes care of the type of safety which enables programmers to code easily since they do not have to perform long, individual type castings.
 
-214. arraylist vs linkedlist
+Generic Classes: A generic class is implemented exactly like a non-generic class. The only difference is that it contains a type parameter section. There can be more than one type of parameter, separated by a comma. The classes, which accept one or more parameters, ​are known as parameterized classes or parameterized types.
 
-215. exception handling. runtime and complile time excpetion.
-
-216. throw and throws.
-
+Generic Class 
+Like C++, we use <> to specify parameter types in generic class creation. To create objects of a generic class, we use the following syntax. 
 217. can we have multiple try blocks 
+In Java, using a try block inside another try block is permitted. It is called as nested try block. Every statement that we enter a statement in try block, context of that exception is pushed onto the stack.
 
+For example, the inner try block can be used to handle ArrayIndexOutOfBoundsException while the outer try block can handle the ArithemeticException (division by zero).
+
+Why use nested try block
+Sometimes a situation may arise where a part of a block may cause one error and the entire block itself may cause another error. In such cases, exception handlers have to be nested.
 218. nested try blocks
-
+public class NestedTryBlock{    
+ public static void main(String args[]){   
+ //outer try block   
+  try{    
+  //inner try block 1  
+    try{    
+     System.out.println("going to divide by 0");    
+     int b =39/0;    
+   }  
+    //catch block of inner try block 1  
+    catch(ArithmeticException e)  
+    {  
+      System.out.println(e);  
+    }    
+       
+    
+    //inner try block 2  
+    try{    
+    int a[]=new int[5];    
+  
+    //assigning the value out of array bounds  
+     a[5]=4;    
+     }  
+  
+    //catch block of inner try block 2  
+    catch(ArrayIndexOutOfBoundsException e)  
+    {  
+       System.out.println(e);  
+    }    
+  
+      
+    System.out.println("other statement");    
+  }  
+  //catch block of outer try block  
+  catch(Exception e)  
+  {  
+    System.out.println("handled the exception (outer catch)");  
+  }    
+    
+  System.out.println("normal flow..");    
+ }    
+}  
 219. multiple catch blocks
+Before Java 7, we had to catch only one exception type in each catch block. So, whenever we needed to handle more than one specific exception but take some action for all exceptions, we had to have more than one catch block containing the same code.
 
-220. multi threading.
+In the following code, we have to handle two different exceptions but take the same action for both. So we needed to have two different catch blocks as of Java 6.0.
 
-221. how oops concepts are using. in each 
+// A Java program to demonstrate that we needed
+// multiple catch blocks for multiple exceptions
+// prior to Java 7
+ 
+import java.util.Scanner;
+public class Test
+{
+    public static void main(String args[])
+    {
+        Scanner scn = new Scanner(System.in);
+        try
+        {
+            int n = Integer.parseInt(scn.nextLine());
+           
+            if (99%n == 0)
+                System.out.println(n + " is a factor of 99");
+        }
+        catch (ArithmeticException ex)
+        {
+            System.out.println("Arithmetic " + ex);
+        }
+        catch (NumberFormatException ex)
+        {
+            System.out.println("Number Format Exception " + ex);
+        }
+    }
+}
+
+
 
 222. differce between requestMapping and getmapping
+Before Spring 4.3, Spring had only @RequestMapping annotation for mapping all the incoming HTTP request URLs to the corresponding controller methods.
 
+For example, in the given below code, we are using the @RequestMapping annotation to map 3 different HTTP requests to their respective controller methods. Notice that we have specified the HTTP request type (GET, POST etc.) as the annotation attribute method.
+
+Mapping controller methods with @RequestMapping
+@RequestMapping(value = "/users", method = RequestMethod.GET)
+public Users getUsers() {
+}
+
+@RequestMapping(value = "/users", method = RequestMethod.POST)
+public User createUser(User user) {
+}
+
+@RequestMapping(value = "/users/{id}", method = RequestMethod.GET)
+public User getUser(@PathVariable("id") String id) {
+}
+Spring 4.3 introduced five new and more specific annotations for each HTTP request type.
+
+@GetMapping
+@PostMapping
+@PutMapping
+@DeleteMapping
+@PatchMapping
+Using these new annotations, we can rewrite the @RequestMapping example as given below. If you see carefully, we do not have the method attribute anymore in the new annotations.
+
+Mapping controller methods with more specific annotations
+@GetMapping(value = "/users")
+public Users getUsers() {
+}
+
+@PostMapping(value = "/users")
+public User createUser(User user) {
+}
+
+@GetMapping(value = "/users/{id}")
+public User getUser(@PathVariable("id") String id) {
 223. sprig profiles in springboot..??
+In this tutorial, we'll focus on introducing Profiles in Spring.
 
-224. IOC containers, dependency injection.
+Profiles are a core feature of the framework — allowing us to map our beans to different profiles — for example, dev, test, and prod.
+
+We can then activate different profiles in different environments to bootstrap only the beans we need.
+Let's start simple and look at how we can make a bean belong to a particular profile. We use the @Profile annotation — we are mapping the bean to that particular profile; the annotation simply takes the names of one (or multiple) profiles.
+
+Consider a basic scenario: We have a bean that should only be active during development but not deployed in production.
+We annotate that bean with a dev profile, and it will only be present in the container during development. In production, the dev simply won't be active:
+
+@Component
+@Profile("dev")
+public class DevDatasourceConfig
 
 225.  pattern and string reverse program
 
-226. what is SDLC.
-
 227. how to make a rest call.
+private static void getEmployees()
+{
+    final String uri = "http://localhost:8080/springrestexample/employees.xml";
 
+    RestTemplate restTemplate = new RestTemplate();
+    String result = restTemplate.getForObject(uri, String.class);
+
+    System.out.println(result);
+}
 228. differnce in regular API and microservices.
+Microservices Architecture is an architectural style that structures an application as a collection of small autonomous services. modeled around a business domain.
 
+In a Microservice Architecture, each service is self-contained and implements a single business capability. It is a popular way where we build web applications now, for those reasons we outlined above. To recap, an architecture makes it easier and fastest way to build and work on individual parts of an application, and thus the application as a whole.
+
+Application Program Interface (API) is a way through which you can make sure two or more applications communicate with each other to process the client request.
+It is incorrect to say that microservices are like web services but more fine-grained.
+APIs are not microservices.
+Microservices are not implementation of and API.
+Difference between Microservice and API :
+
+SR no	MICROSERVICE	API
+1	Microservice are components.	APIs are interface.
+2	Microservices can be used to expose one more APIs.	APIs is one of the mean to build and expose microservices architecture.
+3	Not all Microservice components expose APIs.	API architecture and Microservices architecture is different.
+4	Microservices is small size.	API is large is size in complex implementation cases.
+5	Microservices take quick to build.	APIs take longer time build than Microservices .
+6	Easy and discrete connection of building blocks.	Highly formatted APIs.
 229. why do we nneed iterfaces..?? abstact class and interface 
 
 230.  how to cover REST call part using mockito.
-
+ using when. then statements.
 231. how to iterate a hashMap. how to iterate Arraylist.
-
+for( String key : HashMapOhjects.keySet()){
+Syso(HashMapOhjects.get(key));
+   
+}
 232. first max and second max of an array
+take the array to arraylist.
+sortit using collections.sort method.
+then you can get any max number.
 
-233. how to extend an exception. 
 
-234. if a class extend exception .them it is a checked or uncheked excpetion
 
-235. @controller Vs @RestController.
+234. if a class extend exception .then it is a checked or uncheked excpetion
+Remember the biggest difference between checked and unchecked exceptions is that checked exceptions are forced by the compiler and used to indicate exceptional conditions that are out of the control of the program, while unchecked exceptions are occurred during runtime and are used to indicate programming errors.
 
-236. @Qualifier
+if you create a custom exception. you use it for particular scenario so it is a checked excpetion
+Custom Exceptions are user-defined exceptions. These are written by programmers specifically for there application use cases. To create a checked custom exception, it must extend Exception or its child classes. Unchecked custom exception extends RuntimeException or its child classes.
 
 237. why we have main method in spring boot . what is auto configutation
+using main method spring boot starts the application to run on server. Auto configration configures all the depencdency mentioned in the pom.xml file.
 
 238. what is mean by authentication and authorization in restful API.
 
-239. is it mandatoruy to have abstract methods in abstract class..?
+239. is it mandatoruy to have abstract methods in abstract class..?-No
 
-240. wgat is the use of abstract class with out abstract methods in java 
+240. what is the use of abstract class with out abstract methods in java 
+Observation 3: In Java, we can have an abstract class without any abstract method. This allows us to create classes that cannot be instantiated but can only be inherited.
+An instance of an abstract class can not be created.
+Constructors are allowed.
+We can have an abstract class without any abstract method.
+There can be a final method in abstract class but any abstract method in class(abstract class) can not be declared as final  or in simper terms final method can not be abstract itself as it will yield an error: “Illegal combination of modifiers: abstract and final”
+We are not allowed to create objects for an abstract class.
+We can define static methods in an abstract class
+We can use the abstract keyword for declaring top-level classes (Outer class) as well as inner classes as abstract
+If a class contains at least one abstract method then compulsory should declare a class as abstract 
+If the Child class is unable to provide implementation to all abstract methods of the Parent class then we should declare that Child class as abstract so that the next level Child class should provide implementation to the remaining abstract method
 
 241. Java Stream API. 
+Introduced in Java 8, the Stream API is used to process collections of objects. A stream is a sequence of objects that supports various methods which can be pipelined to produce the desired result. Before proceeding further let us discuss out the difference between Collection and Streams in order to understand why this concept was introduced.
+
+A stream is not a data structure instead it takes input from the Collections, Arrays, or I/O channels.
+Streams don’t change the original data structure, they only provide the result as per the pipelined methods.
+Each intermediate operation is lazily executed and returns a stream as a result, hence various intermediate operations can be pipelined. Terminal operations mark the end of the stream and return the result.
+Before moving ahead in the concept consider an example in which we are having ArrayList of integers, and we suppose we apply a filter to get only even numbers from the object inserted.
 
 242. how will you filter null values from list using streams. 
+cars.stream()
+        .filter(Objects::nonNull)
+		
+243. how to convert list to map using maps
 
-243. how to conver list to map using maps
-
-244. what is concurrent hashmap.
 
 245. I want remove duplicate values from Arraylist . how to do it.
+add the arraylist objects to hashset.
 
 246. HashSET
 
 247. Springboot vs Spring MVC
 
 248. inbuilt server available in Springboot.
-
-249. @AutoConfiguration anotation do
+tomact server configurable at port 8080
 
 250. methos avalable in rest api.
-
+get,put,post,delete patch.
 251. microservices spring security in project. 
 
 252. how to configurte spring secuity in application.
-
-253.what are bean scope types
-
 254.  
 
 
